@@ -1,16 +1,28 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { Provider } from "react-redux";
+import { store } from "./app/store";
+import App from "./App";
+import "./index.css";
+import reportWebVitals from "./reportWebVitals";
+import { registerLicense } from "@syncfusion/ej2-base";
+import { ContextProvider } from "./contexts/ContextProvider";
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+registerLicense(
+  "ORg4AjUWIQA/Gnt2VVhiQlFaclpJXGFWfVJpTGpQdk5xdV9DaVZUTWY/P1ZhSXxRdk1hUX5WdXdQQ2lYUkw="
 );
+
+const container = document.getElementById("root")!;
+const root = createRoot(container);
+
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+ 
+    <Provider store={store}>
+      <ContextProvider>
+        <App />
+      </ContextProvider>
+    </Provider>
+  
 );
 
 // If you want to start measuring performance in your app, pass a function
