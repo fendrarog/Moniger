@@ -1,9 +1,28 @@
-import React from 'react'
+import React from "react";
 
-const SparkLine = () => {
-  return (
-    <div>SparkLine</div>
-  )
+interface SparkLineProps {
+  currentColor: string;
+  id: string;
+  type: string;
+  height: string;
+  width: string;
+  data: {
+    x: number;
+    yval: number;
+  }[];
+  color: string;
 }
 
-export default SparkLine
+const SparkLine: React.FC<SparkLineProps> = ({
+  currentColor,
+  id,
+  type,
+  height,
+  width,
+  data,
+  color,
+}) => {
+  return <div>SparkLine</div>;
+};
+
+export default SparkLine;

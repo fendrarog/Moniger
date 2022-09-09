@@ -14,7 +14,21 @@ import Chat from "./Chat";
 import Notification from "./Notification";
 import UserProfile from "./UserProfile";
 
-const NavButton = ({ title, customFunc, icon, color, dotColor }: any) => (
+interface NavButtonProps {
+  title: string;
+  customFunc: () => void;
+  icon: JSX.Element;
+  color: string;
+  dotColor?: string;
+}
+
+const NavButton: React.FC<NavButtonProps> = ({
+  title,
+  customFunc,
+  icon,
+  color,
+  dotColor,
+}) => (
   <Tooltip
     title={
       <p
@@ -45,7 +59,7 @@ const NavButton = ({ title, customFunc, icon, color, dotColor }: any) => (
   </Tooltip>
 );
 
-const Navbar = () => {
+const Navbar: React.FC = () => {
   const {
     activeMenu,
     setActiveMenu,

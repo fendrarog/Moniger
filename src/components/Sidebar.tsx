@@ -6,7 +6,7 @@ import { Tooltip } from "@mui/material";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import { useStateContext } from "../contexts/ContextProvider";
 
-const Sidebar = () => {
+const Sidebar: React.FC = () => {
   const { activeMenu, setActiveMenu, screenSize } = useStateContext();
 
   const handleCloseSideBar = () => {
