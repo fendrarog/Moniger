@@ -1,7 +1,11 @@
 import React from "react";
-import { Button, SparkLine } from "../components";
-import { earningData, SparklineAreaData } from "../data/dummy";
+import {
+  earningData,
+  sparklineAreaData,
+  stackedChartData,
+} from "../data/dummy";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
+import { Button, SparkLine, Stacked } from "../components";
 
 const Ecommerce: React.FC = () => {
   return (
@@ -90,14 +94,24 @@ const Ecommerce: React.FC = () => {
               <div className="mt-5">
                 <SparkLine
                   currentColor="blue"
-                  id="line-sparkline"
-                  type="Line"
-                  height="80px"
-                  width="250px"
-                  data={SparklineAreaData}
+                  height={80}
+                  width={250}
+                  data={sparklineAreaData}
                   color="blue"
                 />
               </div>
+              <div className="mt-10">
+                <Button
+                  color="white"
+                  bgColor="blue"
+                  text="Download Report"
+                  borderRadius="10px"
+                  size="lg"
+                />
+              </div>
+            </div>
+            <div>
+              <Stacked width={320} height={360} data={stackedChartData} />
             </div>
           </div>
         </div>
