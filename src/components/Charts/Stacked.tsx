@@ -153,8 +153,11 @@ const Stacked: React.FC<StackedProps> = ({ width, height, data }) => {
     setСlickNumber(handleClickСount(clickNumber));
   };
 
+  // Типизировать handleMouseOver ------------------------------------
+
   const handleMouseOver = (data: any, index: number) => {
     setActiveIndex({ [data.tooltipPayload[0].id]: index });
+    console.log([data.tooltipPayload[0].id]);
   };
 
   const dataMin = useMemo(() => findDataMin(processedData), [processedData]);
@@ -201,7 +204,7 @@ const Stacked: React.FC<StackedProps> = ({ width, height, data }) => {
                 clickNumber[Object.keys(clickNumber)[1]] % 2 ? 0.5 : 1;
               return (
                 <span
-                  className="hover:drop-shadow-xl"
+                  className="hover:drop-shadow-xl cursor-pointer"
                   style={{ color, opacity }}
                 >
                   Expense
@@ -213,7 +216,7 @@ const Stacked: React.FC<StackedProps> = ({ width, height, data }) => {
                 clickNumber[Object.keys(clickNumber)[0]] % 2 ? 0.5 : 1;
               return (
                 <span
-                  className="hover:drop-shadow-xl"
+                  className="hover:drop-shadow-xl cursor-pointer"
                   style={{ color, opacity }}
                 >
                   Budget

@@ -1,4 +1,3 @@
-import React from "react";
 import {
   AiOutlineCalendar,
   AiOutlineShoppingCart,
@@ -42,26 +41,38 @@ import product4 from "./product4.jpg";
 import product5 from "./product5.jpg";
 import product6 from "./product6.jpg";
 import product7 from "./product7.jpg";
+import {
+  GridColDef,
+  GridRenderCellParams,
+  GridRowsProp,
+  GridValidRowModel,
+} from "@mui/x-data-grid";
+import { Avatar, Badge, IconButton, styled } from "@mui/material";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 
-export const gridOrderImage = (props) => (
-  <div>
-    <img
-      className="rounded-xl h-20 md:ml-3"
-      src={props.ProductImage}
-      alt="order-item"
-    />
-  </div>
-);
+export const renderGridOrderImage = (props: GridRenderCellParams) => {
+  return (
+    <div>
+      <img
+        className="object-cover rounded-xl h-20 w-20 md:ml-3"
+        src={props.row.ProductImage}
+        alt="order-item"
+      />
+    </div>
+  );
+};
 
-export const gridOrderStatus = (props) => (
-  <button
-    type="button"
-    style={{ background: props.StatusBg }}
-    className="text-white py-1 px-2 capitalize rounded-2xl text-md"
-  >
-    {props.Status}
-  </button>
-);
+const renderGridOrderStatus = (props: GridRenderCellParams) => {
+  return (
+    <button
+      type="button"
+      style={{ background: props.row.StatusBg }}
+      className="text-white py-1 px-2 capitalize rounded-2xl text-md"
+    >
+      {props.row.Status}
+    </button>
+  );
+};
 
 export const kanbanGrid = [
   { headerText: "To Do", keyField: "Open", allowToggle: true },
@@ -77,21 +88,58 @@ export const kanbanGrid = [
 
   { headerText: "Done", keyField: "Close", allowToggle: true },
 ];
-const gridEmployeeProfile = (props) => (
+
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  "& .MuiBadge-badge": {
+    backgroundColor: "#44b700",
+    color: "#44b700",
+    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+    "&::after": {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      borderRadius: "50%",
+      animation: "ripple 1.2s infinite ease-in-out",
+      border: "1px solid currentColor",
+      content: '""',
+    },
+  },
+  "@keyframes ripple": {
+    "0%": {
+      transform: "scale(.8)",
+      opacity: 1,
+    },
+    "100%": {
+      transform: "scale(2.4)",
+      opacity: 0,
+    },
+  },
+}));
+
+const renderGridEmployeeProfile = (props: GridRenderCellParams) => (
   <div className="flex items-center gap-2">
-    <img
-      className="rounded-full w-10 h-10"
-      src={props.EmployeeImage}
-      alt="employee"
-    />
-    <p>{props.Name}</p>
+    {props.row.EmployeeOnline ? (
+      <StyledBadge
+        overlap="circular"
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        variant="dot"
+      >
+        <Avatar src={props.row.EmployeeImage} alt="employee" />
+      </StyledBadge>
+    ) : (
+      <Avatar src={props.row.EmployeeImage} alt="employee" />
+    )}
+
+    <p>{props.row.Name}</p>
   </div>
 );
 
-const gridEmployeeCountry = (props) => (
+const renderGridEmployeeCountry = (props: GridRenderCellParams) => (
   <div className="flex items-center justify-center gap-2">
     <GrLocation />
-    <span>{props.Country}</span>
+    <span>{props.row.Country}</span>
   </div>
 );
 export const EditorData = () => (
@@ -140,27 +188,33 @@ export const EditorData = () => (
     </h3>
   </div>
 );
-const customerGridImage = (props) => (
+export const renderCustomerGridImage = (props: GridRenderCellParams) => (
   <div className="image flex gap-4">
-    <img
-      className="rounded-full w-10 h-10"
-      src={props.CustomerImage}
-      alt="employee"
-    />
+    {props.row.CustomerOnline ? (
+      <StyledBadge
+        overlap="circular"
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        variant="dot"
+      >
+        <Avatar src={props.row.CustomerImage} alt="customer" />
+      </StyledBadge>
+    ) : (
+      <Avatar src={props.row.CustomerImage} alt="customer" />
+    )}
     <div>
-      <p>{props.CustomerName}</p>
-      <p>{props.CustomerEmail}</p>
+      <p>{props.row.CustomerName}</p>
+      <p>{props.row.CustomerEmail}</p>
     </div>
   </div>
 );
 
-const customerGridStatus = (props) => (
+export const renderCustomerGridStatus = (props: GridRenderCellParams) => (
   <div className="flex gap-2 justify-center items-center text-gray-700 capitalize">
     <p
-      style={{ background: props.StatusBg }}
+      style={{ background: props.row.StatusBg }}
       className="rounded-full h-3 w-3"
     />
-    <p>{props.Status}</p>
+    <p>{props.row.Status}</p>
   </div>
 );
 export const areaPrimaryXAxis = {
@@ -412,99 +466,142 @@ export const LinePrimaryYAxis = {
   minorTickLines: { width: 0 },
 };
 
-export const customersGrid = [
-  { type: "checkbox", width: "50" },
+export const customersGrid: GridColDef[] = [
   {
-    headerText: "Name",
-    width: "150",
-    template: customerGridImage,
-    textAlign: "Center",
+    field: "CustomerName",
+    headerName: "Name",
+    width: 220,
+    renderCell: renderCustomerGridImage,
+    headerAlign: "center",
+  },
+  {
+    field: "Name",
+    headerName: "CustomerName",
+    width: 0,
+    headerAlign: "center",
+    hide: true,
+  },
+  {
+    field: "Email",
+    headerName: "Email",
+    width: 0,
+    headerAlign: "center",
+    hide: true,
   },
   {
     field: "ProjectName",
-    headerText: "Project Name",
-    width: "150",
-    textAlign: "Center",
+    headerName: "Project Name",
+    width: 180,
+    align: "center",
+    headerAlign: "center",
+    editable: true,
   },
   {
     field: "Status",
-    headerText: "Status",
-    width: "130",
-    format: "yMd",
-    textAlign: "Center",
-    template: customerGridStatus,
+    headerName: "Status",
+    width: 130,
+    align: "center",
+    headerAlign: "center",
+    renderCell: renderCustomerGridStatus,
   },
   {
     field: "Weeks",
-    headerText: "Weeks",
-    width: "100",
-    format: "C2",
-    textAlign: "Center",
+    headerName: "Weeks",
+    width: 100,
+    align: "center",
+    headerAlign: "center",
+    editable: true,
+    type: "number",
   },
   {
     field: "Budget",
-    headerText: "Budget",
-    width: "100",
-    format: "yMd",
-    textAlign: "Center",
+    headerName: "Budget",
+    width: 100,
+    align: "center",
+    headerAlign: "center",
   },
 
   {
     field: "Location",
-    headerText: "Location",
-    width: "150",
-    textAlign: "Center",
+    headerName: "Location",
+    width: 170,
+    align: "center",
+    headerAlign: "center",
   },
 
   {
     field: "CustomerID",
-    headerText: "Customer ID",
-    width: "120",
-    textAlign: "Center",
-    isPrimaryKey: true,
+    headerName: "Customer ID",
+    width: 120,
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    field: "Delete",
+    width: 60,
+    sortable: false,
+    disableColumnMenu: true,
+    renderHeader: () => {
+      return (
+        <IconButton onClick={() => {}}>
+          <DeleteOutlinedIcon />
+        </IconButton>
+      );
+    },
   },
 ];
 
-export const employeesGrid = [
+export const employeesGrid: GridColDef[] = [
   {
-    headerText: "Employee",
-    width: "150",
-    template: gridEmployeeProfile,
-    textAlign: "Center",
+    field: "Employee",
+    headerName: "Employee",
+    width: 200,
+    renderCell: renderGridEmployeeProfile,
+    headerAlign: "center",
   },
-  { field: "Name", headerText: "", width: "0", textAlign: "Center" },
+  {
+    field: "Name",
+    headerName: "Name",
+    width: 0,
+    hide: true,
+  },
   {
     field: "Title",
-    headerText: "Designation",
-    width: "170",
-    textAlign: "Center",
+    headerName: "Designation",
+    width: 200,
+    align: "center",
+    headerAlign: "center",
   },
   {
-    headerText: "Country",
-    width: "120",
-    textAlign: "Center",
-    template: gridEmployeeCountry,
+    field: "Country",
+    headerName: "Country",
+    width: 160,
+    align: "center",
+    headerAlign: "center",
+    renderCell: renderGridEmployeeCountry,
   },
 
   {
     field: "HireDate",
-    headerText: "Hire Date",
-    width: "135",
-    format: "yMd",
-    textAlign: "Center",
+    headerName: "Hire Date",
+    width: 135,
+    align: "center",
+    headerAlign: "center",
   },
 
   {
     field: "ReportsTo",
-    headerText: "Reports To",
-    width: "120",
-    textAlign: "Center",
+    headerName: "Reports To",
+    width: 120,
+    align: "center",
+    headerAlign: "center",
   },
   {
     field: "EmployeeID",
-    headerText: "Employee ID",
-    width: "125",
-    textAlign: "Center",
+    headerName: "Employee ID",
+    width: 125,
+    align: "center",
+    headerAlign: "center",
   },
 ];
 
@@ -891,7 +988,7 @@ export const userProfileData = [
   },
 ];
 
-export const ordersGrid = [
+/* export const ordersGrid = [
   {
     headerText: "Image",
     template: gridOrderImage,
@@ -939,9 +1036,9 @@ export const ordersGrid = [
     width: "150",
     textAlign: "Center",
   },
-];
+]; */
 
-export const customersData = [
+export const customersData: GridRowsProp = [
   {
     CustomerID: 1001,
     CustomerName: "Nirav Joshi",
@@ -953,24 +1050,23 @@ export const customersData = [
     Weeks: "40",
     Budget: "$2.4k",
     Location: "India",
+    CustomerOnline: true,
   },
   {
     CustomerID: 1002,
-
     CustomerName: "Sunil Joshi",
     CustomerEmail: "sunil@gmail.com",
     ProjectName: "Elite Admin",
     Status: "Active",
     CustomerImage: avatar3,
-
     StatusBg: "#8BE78B",
     Weeks: "11",
     Budget: "$3.9k",
     Location: "India",
+    CustomerOnline: true,
   },
   {
     CustomerID: 1003,
-
     CustomerName: "Andrew McDownland",
     CustomerEmail: "andrew@gmail.com",
     ProjectName: "Real Homes WP Theme",
@@ -980,10 +1076,10 @@ export const customersData = [
     Weeks: "19",
     Budget: "$24.5k",
     Location: "USA",
+    CustomerOnline: false,
   },
   {
     CustomerID: 1004,
-
     CustomerName: "Christopher Jamil",
     CustomerEmail: "jamil@gmail.com",
     ProjectName: "MedicalPro WP Theme",
@@ -993,10 +1089,10 @@ export const customersData = [
     Weeks: "34",
     Budget: "$16.5k",
     Location: "USA",
+    CustomerOnline: false,
   },
   {
     CustomerID: 1005,
-
     CustomerName: "Michael",
     CustomerEmail: "michael@gmail.com",
     ProjectName: "Weekly WP Theme",
@@ -1006,6 +1102,7 @@ export const customersData = [
     Weeks: "34",
     Budget: "$16.5k",
     Location: "USA",
+    CustomerOnline: true,
   },
   {
     CustomerID: 1006,
@@ -1018,24 +1115,23 @@ export const customersData = [
     Weeks: "40",
     Budget: "$2.4k",
     Location: "India",
+    CustomerOnline: false,
   },
   {
     CustomerID: 1007,
-
     CustomerName: "Sunil Joshi",
     CustomerEmail: "sunil@gmail.com",
     ProjectName: "Elite Admin",
     Status: "Active",
     CustomerImage: avatar3,
-
     StatusBg: "#8BE78B",
     Weeks: "11",
     Budget: "$3.9k",
     Location: "India",
+    CustomerOnline: true,
   },
   {
     CustomerID: 1008,
-
     CustomerName: "Andrew McDownland",
     CustomerEmail: "andrew@gmail.com",
     ProjectName: "Real Homes WP Theme",
@@ -1045,10 +1141,10 @@ export const customersData = [
     Weeks: "19",
     Budget: "$24.5k",
     Location: "USA",
+    CustomerOnline: false,
   },
   {
     CustomerID: 1009,
-
     CustomerName: "Christopher Jamil",
     CustomerEmail: "jamil@gmail.com",
     ProjectName: "MedicalPro WP Theme",
@@ -1058,10 +1154,10 @@ export const customersData = [
     Weeks: "34",
     Budget: "$16.5k",
     Location: "USA",
+    CustomerOnline: true,
   },
   {
     CustomerID: 1010,
-
     CustomerName: "Michael",
     CustomerEmail: "michael@gmail.com",
     ProjectName: "Weekly WP Theme",
@@ -1071,6 +1167,7 @@ export const customersData = [
     Weeks: "34",
     Budget: "$16.5k",
     Location: "USA",
+    CustomerOnline: false,
   },
   {
     CustomerID: 1011,
@@ -1083,24 +1180,23 @@ export const customersData = [
     Weeks: "40",
     Budget: "$2.4k",
     Location: "India",
+    CustomerOnline: true,
   },
   {
     CustomerID: 1012,
-
     CustomerName: "Sunil Joshi",
     CustomerEmail: "sunil@gmail.com",
     ProjectName: "Elite Admin",
     Status: "Active",
     CustomerImage: avatar3,
-
     StatusBg: "#8BE78B",
     Weeks: "11",
     Budget: "$3.9k",
     Location: "India",
+    CustomerOnline: false,
   },
   {
     CustomerID: 1013,
-
     CustomerName: "Andrew McDownland",
     CustomerEmail: "andrew@gmail.com",
     ProjectName: "Real Homes WP Theme",
@@ -1110,10 +1206,10 @@ export const customersData = [
     Weeks: "19",
     Budget: "$24.5k",
     Location: "USA",
+    CustomerOnline: false,
   },
   {
     CustomerID: 1014,
-
     CustomerName: "Christopher Jamil",
     CustomerEmail: "jamil@gmail.com",
     ProjectName: "MedicalPro WP Theme",
@@ -1123,6 +1219,7 @@ export const customersData = [
     Weeks: "34",
     Budget: "$16.5k",
     Location: "USA",
+    CustomerOnline: false,
   },
   {
     CustomerID: 1015,
@@ -1136,6 +1233,7 @@ export const customersData = [
     Weeks: "34",
     Budget: "$16.5k",
     Location: "USA",
+    CustomerOnline: true,
   },
   {
     CustomerID: 1016,
@@ -1148,24 +1246,23 @@ export const customersData = [
     Weeks: "40",
     Budget: "$2.4k",
     Location: "India",
+    CustomerOnline: true,
   },
   {
     CustomerID: 1017,
-
     CustomerName: "Sunil Joshi",
     CustomerEmail: "sunil@gmail.com",
     ProjectName: "Elite Admin",
     Status: "Active",
     CustomerImage: avatar3,
-
     StatusBg: "#8BE78B",
     Weeks: "11",
     Budget: "$3.9k",
     Location: "India",
+    CustomerOnline: true,
   },
   {
     CustomerID: 1018,
-
     CustomerName: "Andrew McDownland",
     CustomerEmail: "andrew@gmail.com",
     ProjectName: "Real Homes WP Theme",
@@ -1175,10 +1272,10 @@ export const customersData = [
     Weeks: "19",
     Budget: "$24.5k",
     Location: "USA",
+    CustomerOnline: true,
   },
   {
     CustomerID: 1019,
-
     CustomerName: "Christopher Jamil",
     CustomerEmail: "jamil@gmail.com",
     ProjectName: "MedicalPro WP Theme",
@@ -1188,10 +1285,10 @@ export const customersData = [
     Weeks: "34",
     Budget: "$16.5k",
     Location: "USA",
+    CustomerOnline: false,
   },
   {
     CustomerID: 1020,
-
     CustomerName: "Michael",
     CustomerEmail: "michael@gmail.com",
     ProjectName: "Weekly WP Theme",
@@ -1201,6 +1298,7 @@ export const customersData = [
     Weeks: "34",
     Budget: "$16.5k",
     Location: "USA",
+    CustomerOnline: false,
   },
   {
     CustomerID: 1021,
@@ -1213,24 +1311,23 @@ export const customersData = [
     Weeks: "40",
     Budget: "$2.4k",
     Location: "India",
+    CustomerOnline: true,
   },
   {
     CustomerID: 1022,
-
     CustomerName: "Sunil Joshi",
     CustomerEmail: "sunil@gmail.com",
     ProjectName: "Elite Admin",
     Status: "Active",
     CustomerImage: avatar3,
-
     StatusBg: "#8BE78B",
     Weeks: "11",
     Budget: "$3.9k",
     Location: "India",
+    CustomerOnline: true,
   },
   {
     CustomerID: 1023,
-
     CustomerName: "Andrew McDownland",
     CustomerEmail: "andrew@gmail.com",
     ProjectName: "Real Homes WP Theme",
@@ -1240,10 +1337,10 @@ export const customersData = [
     Weeks: "19",
     Budget: "$24.5k",
     Location: "USA",
+    CustomerOnline: false,
   },
   {
     CustomerID: 1024,
-
     CustomerName: "Christopher Jamil",
     CustomerEmail: "jamil@gmail.com",
     ProjectName: "MedicalPro WP Theme",
@@ -1253,10 +1350,10 @@ export const customersData = [
     Weeks: "34",
     Budget: "$16.5k",
     Location: "USA",
+    CustomerOnline: true,
   },
   {
     CustomerID: 1025,
-
     CustomerName: "Michael",
     CustomerEmail: "michael@gmail.com",
     ProjectName: "Weekly WP Theme",
@@ -1266,6 +1363,7 @@ export const customersData = [
     Weeks: "34",
     Budget: "$16.5k",
     Location: "USA",
+    CustomerOnline: false,
   },
   {
     CustomerID: 1026,
@@ -1278,24 +1376,23 @@ export const customersData = [
     Weeks: "40",
     Budget: "$2.4k",
     Location: "India",
+    CustomerOnline: true,
   },
   {
     CustomerID: 1027,
-
     CustomerName: "Sunil Joshi",
     CustomerEmail: "sunil@gmail.com",
     ProjectName: "Elite Admin",
     Status: "Active",
     CustomerImage: avatar3,
-
     StatusBg: "#8BE78B",
     Weeks: "11",
     Budget: "$3.9k",
     Location: "India",
+    CustomerOnline: false,
   },
   {
     CustomerID: 1028,
-
     CustomerName: "Andrew McDownland",
     CustomerEmail: "andrew@gmail.com",
     ProjectName: "Real Homes WP Theme",
@@ -1305,10 +1402,10 @@ export const customersData = [
     Weeks: "19",
     Budget: "$24.5k",
     Location: "USA",
+    CustomerOnline: false,
   },
   {
     CustomerID: 1029,
-
     CustomerName: "Christopher Jamil",
     CustomerEmail: "jamil@gmail.com",
     ProjectName: "MedicalPro WP Theme",
@@ -1318,10 +1415,10 @@ export const customersData = [
     Weeks: "34",
     Budget: "$16.5k",
     Location: "USA",
+    CustomerOnline: false,
   },
   {
     CustomerID: 1030,
-
     CustomerName: "Michael",
     CustomerEmail: "michael@gmail.com",
     ProjectName: "Weekly WP Theme",
@@ -1331,6 +1428,7 @@ export const customersData = [
     Weeks: "34",
     Budget: "$16.5k",
     Location: "USA",
+    CustomerOnline: true,
   },
   {
     CustomerID: 1031,
@@ -1343,10 +1441,10 @@ export const customersData = [
     Weeks: "40",
     Budget: "$2.4k",
     Location: "India",
+    CustomerOnline: true,
   },
   {
     CustomerID: 1032,
-
     CustomerName: "Sunil Joshi",
     CustomerEmail: "sunil@gmail.com",
     ProjectName: "Elite Admin",
@@ -1357,10 +1455,10 @@ export const customersData = [
     Weeks: "11",
     Budget: "$3.9k",
     Location: "India",
+    CustomerOnline: false,
   },
   {
     CustomerID: 1033,
-
     CustomerName: "Andrew McDownland",
     CustomerEmail: "andrew@gmail.com",
     ProjectName: "Real Homes WP Theme",
@@ -1370,10 +1468,10 @@ export const customersData = [
     Weeks: "19",
     Budget: "$24.5k",
     Location: "USA",
+    CustomerOnline: true,
   },
   {
     CustomerID: 1034,
-
     CustomerName: "Christopher Jamil",
     CustomerEmail: "jamil@gmail.com",
     ProjectName: "MedicalPro WP Theme",
@@ -1383,10 +1481,10 @@ export const customersData = [
     Weeks: "34",
     Budget: "$16.5k",
     Location: "USA",
+    CustomerOnline: false,
   },
   {
     CustomerID: 1035,
-
     CustomerName: "Michael",
     CustomerEmail: "michael@gmail.com",
     ProjectName: "Weekly WP Theme",
@@ -1396,6 +1494,7 @@ export const customersData = [
     Weeks: "34",
     Budget: "$16.5k",
     Location: "USA",
+    CustomerOnline: true,
   },
   {
     CustomerID: 1036,
@@ -1408,24 +1507,23 @@ export const customersData = [
     Weeks: "40",
     Budget: "$2.4k",
     Location: "India",
+    CustomerOnline: false,
   },
   {
     CustomerID: 1037,
-
     CustomerName: "Sunil Joshi",
     CustomerEmail: "sunil@gmail.com",
     ProjectName: "Elite Admin",
     Status: "Active",
     CustomerImage: avatar3,
-
     StatusBg: "#8BE78B",
     Weeks: "11",
     Budget: "$3.9k",
     Location: "India",
+    CustomerOnline: false,
   },
   {
     CustomerID: 1038,
-
     CustomerName: "Andrew McDownland",
     CustomerEmail: "andrew@gmail.com",
     ProjectName: "Real Homes WP Theme",
@@ -1435,6 +1533,7 @@ export const customersData = [
     Weeks: "19",
     Budget: "$24.5k",
     Location: "USA",
+    CustomerOnline: true,
   },
   {
     CustomerID: 1039,
@@ -1447,6 +1546,7 @@ export const customersData = [
     Weeks: "34",
     Budget: "$16.5k",
     Location: "USA",
+    CustomerOnline: false,
   },
   {
     CustomerID: 1040,
@@ -1459,10 +1559,11 @@ export const customersData = [
     Weeks: "34",
     Budget: "$16.5k",
     Location: "USA",
+    CustomerOnline: true,
   },
 ];
 
-export const employeesData = [
+export const employeesData: GridRowsProp = [
   {
     EmployeeID: 1,
     Name: "Nancy Davolio",
@@ -1471,6 +1572,7 @@ export const employeesData = [
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar3,
+    EmployeeOnline: true,
   },
   {
     EmployeeID: 2,
@@ -1480,6 +1582,7 @@ export const employeesData = [
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar3,
+    EmployeeOnline: false,
   },
   {
     EmployeeID: 3,
@@ -1489,6 +1592,7 @@ export const employeesData = [
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar4,
+    EmployeeOnline: true,
   },
   {
     EmployeeID: 4,
@@ -1498,6 +1602,7 @@ export const employeesData = [
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar2,
+    EmployeeOnline: true,
   },
   {
     EmployeeID: 5,
@@ -1507,536 +1612,660 @@ export const employeesData = [
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 4,
+    EmployeeID: 6,
     Name: "Penjani Inyene",
     Title: "Marketing Head",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar,
+    EmployeeOnline: true,
   },
   {
-    EmployeeID: 5,
+    EmployeeID: 7,
     Name: "Miron Vitold",
     Title: "HR",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar2,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 1,
+    EmployeeID: 8,
     Name: "Nancy Davolio",
     Title: "Sales Representative",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar2,
+    EmployeeOnline: true,
   },
   {
-    EmployeeID: 2,
+    EmployeeID: 9,
     Name: "Nasimiyu Danai",
     Title: "Marketing Head",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar3,
+    EmployeeOnline: true,
   },
   {
-    EmployeeID: 3,
+    EmployeeID: 10,
     Name: "Iulia Albu",
     Title: "HR",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar4,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 4,
+    EmployeeID: 11,
     Name: "Siegbert Gottfried",
     Title: "Marketing Head",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar2,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 5,
+    EmployeeID: 12,
     Name: "Omar Darobe",
     Title: "HR",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar,
+    EmployeeOnline: true,
   },
   {
-    EmployeeID: 4,
+    EmployeeID: 13,
     Name: "Penjani Inyene",
     Title: "Marketing Head",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar,
+    EmployeeOnline: true,
   },
   {
-    EmployeeID: 5,
+    EmployeeID: 14,
     Name: "Miron Vitold",
     Title: "HR",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar2,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 1,
+    EmployeeID: 15,
     Name: "Nancy Davolio",
     Title: "Sales Representative",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 2,
+    EmployeeID: 16,
     Name: "Nasimiyu Danai",
     Title: "Marketing Head",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar3,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 3,
+    EmployeeID: 17,
     Name: "Iulia Albu",
     Title: "HR",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar4,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 4,
+    EmployeeID: 18,
     Name: "Siegbert Gottfried",
     Title: "Marketing Head",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar2,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 5,
+    EmployeeID: 19,
     Name: "Omar Darobe",
     Title: "HR",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar,
+    EmployeeOnline: true,
   },
   {
-    EmployeeID: 4,
+    EmployeeID: 20,
     Name: "Penjani Inyene",
     Title: "Marketing Head",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 5,
+    EmployeeID: 21,
     Name: "Miron Vitold",
     Title: "HR",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar2,
+    EmployeeOnline: true,
   },
   {
-    EmployeeID: 1,
+    EmployeeID: 22,
     Name: "Nancy Davolio",
     Title: "Sales Representative",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar2,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 2,
+    EmployeeID: 23,
     Name: "Nasimiyu Danai",
     Title: "Marketing Head",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar3,
+    EmployeeOnline: true,
   },
   {
-    EmployeeID: 3,
+    EmployeeID: 24,
     Name: "Iulia Albu",
     Title: "HR",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar4,
+    EmployeeOnline: true,
   },
   {
-    EmployeeID: 4,
+    EmployeeID: 25,
     Name: "Siegbert Gottfried",
     Title: "Marketing Head",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar2,
+    EmployeeOnline: true,
   },
   {
-    EmployeeID: 5,
+    EmployeeID: 26,
     Name: "Omar Darobe",
     Title: "HR",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 4,
+    EmployeeID: 27,
     Name: "Penjani Inyene",
     Title: "Marketing Head",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 5,
+    EmployeeID: 28,
     Name: "Miron Vitold",
     Title: "HR",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar2,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 1,
+    EmployeeID: 29,
     Name: "Nancy Davolio",
     Title: "Sales Representative",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar2,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 2,
+    EmployeeID: 30,
     Name: "Nasimiyu Danai",
     Title: "Marketing Head",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar3,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 3,
+    EmployeeID: 31,
     Name: "Iulia Albu",
     Title: "HR",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar4,
+    EmployeeOnline: true,
   },
   {
-    EmployeeID: 4,
+    EmployeeID: 32,
     Name: "Siegbert Gottfried",
     Title: "Marketing Head",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar2,
+    EmployeeOnline: true,
   },
   {
-    EmployeeID: 5,
+    EmployeeID: 33,
     Name: "Omar Darobe",
     Title: "HR",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar,
+    EmployeeOnline: true,
   },
   {
-    EmployeeID: 4,
+    EmployeeID: 34,
     Name: "Penjani Inyene",
     Title: "Marketing Head",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 5,
+    EmployeeID: 35,
     Name: "Miron Vitold",
     Title: "HR",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar2,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 1,
+    EmployeeID: 36,
     Name: "Nancy Davolio",
     Title: "Sales Representative",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar2,
+    EmployeeOnline: true,
   },
   {
-    EmployeeID: 2,
+    EmployeeID: 37,
     Name: "Nasimiyu Danai",
     Title: "Marketing Head",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar3,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 3,
+    EmployeeID: 38,
     Name: "Iulia Albu",
     Title: "HR",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar4,
+    EmployeeOnline: true,
   },
   {
-    EmployeeID: 4,
+    EmployeeID: 39,
     Name: "Siegbert Gottfried",
     Title: "Marketing Head",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar2,
+    EmployeeOnline: true,
   },
   {
-    EmployeeID: 5,
+    EmployeeID: 40,
     Name: "Omar Darobe",
     Title: "HR",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 4,
+    EmployeeID: 41,
     Name: "Penjani Inyene",
     Title: "Marketing Head",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 5,
+    EmployeeID: 42,
     Name: "Miron Vitold",
     Title: "HR",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar2,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 1,
+    EmployeeID: 43,
     Name: "Nancy Davolio",
     Title: "Sales Representative",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar2,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 2,
+    EmployeeID: 44,
     Name: "Nasimiyu Danai",
     Title: "Marketing Head",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar3,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 3,
+    EmployeeID: 45,
     Name: "Iulia Albu",
     Title: "HR",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar4,
+    EmployeeOnline: true,
   },
   {
-    EmployeeID: 4,
+    EmployeeID: 46,
     Name: "Siegbert Gottfried",
     Title: "Marketing Head",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar2,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 5,
+    EmployeeID: 47,
     Name: "Omar Darobe",
     Title: "HR",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar,
+    EmployeeOnline: true,
   },
   {
-    EmployeeID: 4,
+    EmployeeID: 48,
     Name: "Penjani Inyene",
     Title: "Marketing Head",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar,
+    EmployeeOnline: true,
   },
   {
-    EmployeeID: 5,
+    EmployeeID: 49,
     Name: "Miron Vitold",
     Title: "HR",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar2,
+    EmployeeOnline: true,
   },
   {
-    EmployeeID: 1,
+    EmployeeID: 50,
     Name: "Nancy Davolio",
     Title: "Sales Representative",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar2,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 2,
+    EmployeeID: 51,
     Name: "Nasimiyu Danai",
     Title: "Marketing Head",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar3,
+    EmployeeOnline: true,
   },
   {
-    EmployeeID: 3,
+    EmployeeID: 52,
     Name: "Iulia Albu",
     Title: "HR",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar4,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 4,
+    EmployeeID: 53,
     Name: "Siegbert Gottfried",
     Title: "Marketing Head",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar2,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 5,
+    EmployeeID: 54,
     Name: "Omar Darobe",
     Title: "HR",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 4,
+    EmployeeID: 55,
     Name: "Penjani Inyene",
     Title: "Marketing Head",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 5,
+    EmployeeID: 56,
     Name: "Miron Vitold",
     Title: "HR",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar2,
+    EmployeeOnline: true,
   },
   {
-    EmployeeID: 1,
+    EmployeeID: 57,
     Name: "Nancy Davolio",
     Title: "Sales Representative",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar2,
+    EmployeeOnline: true,
   },
   {
-    EmployeeID: 2,
+    EmployeeID: 58,
     Name: "Nasimiyu Danai",
     Title: "Marketing Head",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar3,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 3,
+    EmployeeID: 59,
     Name: "Iulia Albu",
     Title: "HR",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar4,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 4,
+    EmployeeID: 60,
     Name: "Siegbert Gottfried",
     Title: "Marketing Head",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar2,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 5,
+    EmployeeID: 61,
     Name: "Omar Darobe",
     Title: "HR",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar,
+    EmployeeOnline: true,
   },
   {
-    EmployeeID: 4,
+    EmployeeID: 62,
     Name: "Penjani Inyene",
     Title: "Marketing Head",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar,
+    EmployeeOnline: false,
   },
   {
-    EmployeeID: 5,
+    EmployeeID: 63,
     Name: "Miron Vitold",
     Title: "HR",
     HireDate: "01/02/2021",
     Country: "USA",
     ReportsTo: "Carson",
     EmployeeImage: avatar2,
+    EmployeeOnline: true,
   },
 ];
 
-export const ordersData = [
+export const ordersGrid: GridColDef[] = [
+  {
+    field: "Image",
+    headerName: "Image",
+    renderCell: renderGridOrderImage,
+    width: 120,
+    align: "center",
+    headerAlign: "center",
+    filterable: false,
+  },
+  {
+    field: "OrderItems",
+    headerName: "Item",
+    width: 150,
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    field: "CustomerName",
+    headerName: "Customer Name",
+    width: 150,
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    field: "TotalAmount",
+    headerName: "Total Amount",
+    type: "number",
+    width: 150,
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    field: "Status",
+    headerName: "Status",
+    renderCell: renderGridOrderStatus,
+    width: 120,
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    field: "OrderID",
+    headerName: "Order ID",
+    type: "number",
+    width: 120,
+    align: "center",
+    headerAlign: "center",
+  },
+  {
+    field: "Location",
+    headerName: "Location",
+    width: 150,
+    align: "center",
+    headerAlign: "center",
+  },
+  /* {
+    field: "fullName",
+    headerName: "Full name",
+    description: "This column has a value getter and is not sortable.",
+    sortable: false,
+    width: 160,
+    valueGetter: (params: GridValueGetterParams) =>
+      `${params.row.firstName || ""} ${params.row.lastName || ""}`,
+  }, */
+];
+
+export const ordersData: GridRowsProp = [
   {
     OrderID: 10248,
     CustomerName: "Vinet",
-
     TotalAmount: 32.38,
     OrderItems: "Fresh Tomato",
     Location: "USA",
@@ -2105,7 +2334,7 @@ export const ordersData = [
     ProductImage: product3,
   },
   {
-    OrderID: 845954,
+    OrderID: 849994,
     CustomerName: "Penjani",
     TotalAmount: 59.99,
     OrderItems: "Headphone",
@@ -2115,7 +2344,7 @@ export const ordersData = [
     ProductImage: product4,
   },
   {
-    OrderID: 845954,
+    OrderID: 845924,
     CustomerName: "Jie Yan",
     TotalAmount: 87.99,
     OrderItems: "Shoes",
@@ -2159,7 +2388,7 @@ export const ordersData = [
       "https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80",
   },
   {
-    OrderID: 874534,
+    OrderID: 812334,
     CustomerName: "Danai",
     TotalAmount: 122.99,
     OrderItems: "Watch",
@@ -2170,7 +2399,7 @@ export const ordersData = [
       "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/pop-womens-garmin-watches-1641919013.jpg?crop=0.502xw:1.00xh;0.250xw,0&resize=640:*",
   },
   {
-    OrderID: 10248,
+    OrderID: 13248,
     CustomerName: "Vinet",
 
     TotalAmount: 32.38,
@@ -2181,7 +2410,7 @@ export const ordersData = [
     ProductImage: product6,
   },
   {
-    OrderID: 345653,
+    OrderID: 322653,
     CustomerName: "Carson Darrin",
     TotalAmount: 56.34,
     OrderItems: "Butter Scotch",
@@ -2191,7 +2420,7 @@ export const ordersData = [
     ProductImage: product5,
   },
   {
-    OrderID: 390457,
+    OrderID: 311457,
     CustomerName: "Fran Perez",
     TotalAmount: 93.31,
     OrderItems: "Candy Gucci",
@@ -2201,7 +2430,7 @@ export const ordersData = [
     ProductImage: product7,
   },
   {
-    OrderID: 893486,
+    OrderID: 811486,
     CustomerName: "Anika Viseer",
     TotalAmount: 93.31,
     OrderItems: "Night Lamp",
@@ -2211,7 +2440,7 @@ export const ordersData = [
     ProductImage: product4,
   },
   {
-    OrderID: 748975,
+    OrderID: 711975,
     CustomerName: "Miron Vitold",
     TotalAmount: 23.99,
     OrderItems: "Healthcare Erbology",
@@ -2221,7 +2450,7 @@ export const ordersData = [
     ProductImage: product1,
   },
   {
-    OrderID: 94757,
+    OrderID: 91157,
     CustomerName: "Omar Darobe",
     TotalAmount: 95.99,
     OrderItems: "Makeup Lancome Rouge",
@@ -2231,7 +2460,7 @@ export const ordersData = [
     ProductImage: product2,
   },
   {
-    OrderID: 944895,
+    OrderID: 941195,
     CustomerName: "Lulia albu",
     TotalAmount: 17.99,
     OrderItems: "Skincare",
@@ -2241,7 +2470,7 @@ export const ordersData = [
     ProductImage: product3,
   },
   {
-    OrderID: 845954,
+    OrderID: 852954,
     CustomerName: "Penjani",
     TotalAmount: 59.99,
     OrderItems: "Headphone",
@@ -2251,7 +2480,7 @@ export const ordersData = [
     ProductImage: product4,
   },
   {
-    OrderID: 845954,
+    OrderID: 846354,
     CustomerName: "Jie Yan",
     TotalAmount: 87.99,
     OrderItems: "Shoes",
@@ -2262,7 +2491,7 @@ export const ordersData = [
       "https://cdn.shopclues.com/images1/thumbnails/104158/320/320/148648730-104158193-1592481791.jpg",
   },
   {
-    OrderID: 874534,
+    OrderID: 823434,
     CustomerName: "Danai",
     TotalAmount: 122.99,
     OrderItems: "Watch",
@@ -2273,7 +2502,7 @@ export const ordersData = [
       "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/pop-womens-garmin-watches-1641919013.jpg?crop=0.502xw:1.00xh;0.250xw,0&resize=640:*",
   },
   {
-    OrderID: 38489,
+    OrderID: 38411,
     CustomerName: "Miron",
     TotalAmount: 87.99,
     OrderItems: "Ice Cream",
@@ -2284,7 +2513,7 @@ export const ordersData = [
       "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/dairy-free-ice-cream-eae372d.jpg",
   },
   {
-    OrderID: 24546,
+    OrderID: 24511,
     CustomerName: "Frank",
     TotalAmount: 84.99,
     OrderItems: "Pan Cake",
@@ -2295,7 +2524,7 @@ export const ordersData = [
       "https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80",
   },
   {
-    OrderID: 874534,
+    OrderID: 834534,
     CustomerName: "Danai",
     TotalAmount: 122.99,
     OrderItems: "Watch",
@@ -2306,9 +2535,8 @@ export const ordersData = [
       "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/pop-womens-garmin-watches-1641919013.jpg?crop=0.502xw:1.00xh;0.250xw,0&resize=640:*",
   },
   {
-    OrderID: 10248,
+    OrderID: 11248,
     CustomerName: "Vinet",
-
     TotalAmount: 32.38,
     OrderItems: "Fresh Tomato",
     Location: "USA",
@@ -2317,7 +2545,7 @@ export const ordersData = [
     ProductImage: product6,
   },
   {
-    OrderID: 345653,
+    OrderID: 333653,
     CustomerName: "Carson Darrin",
     TotalAmount: 56.34,
     OrderItems: "Butter Scotch",
@@ -2327,7 +2555,7 @@ export const ordersData = [
     ProductImage: product5,
   },
   {
-    OrderID: 390457,
+    OrderID: 322457,
     CustomerName: "Fran Perez",
     TotalAmount: 93.31,
     OrderItems: "Candy Gucci",
@@ -2337,7 +2565,7 @@ export const ordersData = [
     ProductImage: product7,
   },
   {
-    OrderID: 893486,
+    OrderID: 822486,
     CustomerName: "Anika Viseer",
     TotalAmount: 93.31,
     OrderItems: "Night Lamp",
@@ -2347,7 +2575,7 @@ export const ordersData = [
     ProductImage: product4,
   },
   {
-    OrderID: 748975,
+    OrderID: 722975,
     CustomerName: "Miron Vitold",
     TotalAmount: 23.99,
     OrderItems: "Healthcare Erbology",
@@ -2357,7 +2585,7 @@ export const ordersData = [
     ProductImage: product1,
   },
   {
-    OrderID: 94757,
+    OrderID: 92257,
     CustomerName: "Omar Darobe",
     TotalAmount: 95.99,
     OrderItems: "Makeup Lancome Rouge",
@@ -2367,7 +2595,7 @@ export const ordersData = [
     ProductImage: product2,
   },
   {
-    OrderID: 944895,
+    OrderID: 942295,
     CustomerName: "Lulia albu",
     TotalAmount: 17.99,
     OrderItems: "Skincare",
@@ -2377,7 +2605,7 @@ export const ordersData = [
     ProductImage: product3,
   },
   {
-    OrderID: 845954,
+    OrderID: 845911,
     CustomerName: "Penjani",
     TotalAmount: 59.99,
     OrderItems: "Headphone",
@@ -2387,7 +2615,7 @@ export const ordersData = [
     ProductImage: product4,
   },
   {
-    OrderID: 845954,
+    OrderID: 822254,
     CustomerName: "Jie Yan",
     TotalAmount: 87.99,
     OrderItems: "Shoes",
@@ -2398,7 +2626,7 @@ export const ordersData = [
       "https://cdn.shopclues.com/images1/thumbnails/104158/320/320/148648730-104158193-1592481791.jpg",
   },
   {
-    OrderID: 874534,
+    OrderID: 856734,
     CustomerName: "Danai",
     TotalAmount: 122.99,
     OrderItems: "Watch",
@@ -2409,7 +2637,7 @@ export const ordersData = [
       "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/pop-womens-garmin-watches-1641919013.jpg?crop=0.502xw:1.00xh;0.250xw,0&resize=640:*",
   },
   {
-    OrderID: 38489,
+    OrderID: 38422,
     CustomerName: "Miron",
     TotalAmount: 87.99,
     OrderItems: "Ice Cream",
@@ -2420,7 +2648,7 @@ export const ordersData = [
       "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/dairy-free-ice-cream-eae372d.jpg",
   },
   {
-    OrderID: 24546,
+    OrderID: 24522,
     CustomerName: "Frank",
     TotalAmount: 84.99,
     OrderItems: "Pan Cake",
@@ -2431,7 +2659,7 @@ export const ordersData = [
       "https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80",
   },
   {
-    OrderID: 874534,
+    OrderID: 811534,
     CustomerName: "Danai",
     TotalAmount: 122.99,
     OrderItems: "Watch",
@@ -2442,9 +2670,8 @@ export const ordersData = [
       "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/pop-womens-garmin-watches-1641919013.jpg?crop=0.502xw:1.00xh;0.250xw,0&resize=640:*",
   },
   {
-    OrderID: 10248,
+    OrderID: 17748,
     CustomerName: "Vinet",
-
     TotalAmount: 32.38,
     OrderItems: "Fresh Tomato",
     Location: "USA",
@@ -2453,7 +2680,7 @@ export const ordersData = [
     ProductImage: product6,
   },
   {
-    OrderID: 345653,
+    OrderID: 355653,
     CustomerName: "Carson Darrin",
     TotalAmount: 56.34,
     OrderItems: "Butter Scotch",
@@ -2463,7 +2690,7 @@ export const ordersData = [
     ProductImage: product5,
   },
   {
-    OrderID: 390457,
+    OrderID: 333457,
     CustomerName: "Fran Perez",
     TotalAmount: 93.31,
     OrderItems: "Candy Gucci",
@@ -2473,7 +2700,7 @@ export const ordersData = [
     ProductImage: product7,
   },
   {
-    OrderID: 893486,
+    OrderID: 833486,
     CustomerName: "Anika Viseer",
     TotalAmount: 93.31,
     OrderItems: "Night Lamp",
@@ -2483,7 +2710,7 @@ export const ordersData = [
     ProductImage: product4,
   },
   {
-    OrderID: 748975,
+    OrderID: 733975,
     CustomerName: "Miron Vitold",
     TotalAmount: 23.99,
     OrderItems: "Healthcare Erbology",
@@ -2493,7 +2720,7 @@ export const ordersData = [
     ProductImage: product1,
   },
   {
-    OrderID: 94757,
+    OrderID: 93357,
     CustomerName: "Omar Darobe",
     TotalAmount: 95.99,
     OrderItems: "Makeup Lancome Rouge",
@@ -2503,7 +2730,7 @@ export const ordersData = [
     ProductImage: product2,
   },
   {
-    OrderID: 944895,
+    OrderID: 943395,
     CustomerName: "Lulia albu",
     TotalAmount: 17.99,
     OrderItems: "Skincare",
@@ -2513,7 +2740,7 @@ export const ordersData = [
     ProductImage: product3,
   },
   {
-    OrderID: 845954,
+    OrderID: 844444,
     CustomerName: "Penjani",
     TotalAmount: 59.99,
     OrderItems: "Headphone",
@@ -2523,7 +2750,7 @@ export const ordersData = [
     ProductImage: product4,
   },
   {
-    OrderID: 845954,
+    OrderID: 832154,
     CustomerName: "Jie Yan",
     TotalAmount: 87.99,
     OrderItems: "Shoes",
@@ -2534,7 +2761,7 @@ export const ordersData = [
       "https://cdn.shopclues.com/images1/thumbnails/104158/320/320/148648730-104158193-1592481791.jpg",
   },
   {
-    OrderID: 874534,
+    OrderID: 822534,
     CustomerName: "Danai",
     TotalAmount: 122.99,
     OrderItems: "Watch",
@@ -2545,7 +2772,7 @@ export const ordersData = [
       "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/pop-womens-garmin-watches-1641919013.jpg?crop=0.502xw:1.00xh;0.250xw,0&resize=640:*",
   },
   {
-    OrderID: 38489,
+    OrderID: 38433,
     CustomerName: "Miron",
     TotalAmount: 87.99,
     OrderItems: "Ice Cream",
@@ -2556,7 +2783,7 @@ export const ordersData = [
       "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/dairy-free-ice-cream-eae372d.jpg",
   },
   {
-    OrderID: 24546,
+    OrderID: 24533,
     CustomerName: "Frank",
     TotalAmount: 84.99,
     OrderItems: "Pan Cake",
@@ -2567,7 +2794,7 @@ export const ordersData = [
       "https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80",
   },
   {
-    OrderID: 874534,
+    OrderID: 833534,
     CustomerName: "Danai",
     TotalAmount: 122.99,
     OrderItems: "Watch",
@@ -2578,9 +2805,8 @@ export const ordersData = [
       "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/pop-womens-garmin-watches-1641919013.jpg?crop=0.502xw:1.00xh;0.250xw,0&resize=640:*",
   },
   {
-    OrderID: 10248,
+    OrderID: 10888,
     CustomerName: "Vinet",
-
     TotalAmount: 32.38,
     OrderItems: "Fresh Tomato",
     Location: "USA",
@@ -2589,7 +2815,7 @@ export const ordersData = [
     ProductImage: product6,
   },
   {
-    OrderID: 345653,
+    OrderID: 366653,
     CustomerName: "Carson Darrin",
     TotalAmount: 56.34,
     OrderItems: "Butter Scotch",
@@ -2599,7 +2825,7 @@ export const ordersData = [
     ProductImage: product5,
   },
   {
-    OrderID: 390457,
+    OrderID: 344457,
     CustomerName: "Fran Perez",
     TotalAmount: 93.31,
     OrderItems: "Candy Gucci",
@@ -2609,7 +2835,7 @@ export const ordersData = [
     ProductImage: product7,
   },
   {
-    OrderID: 893486,
+    OrderID: 844486,
     CustomerName: "Anika Viseer",
     TotalAmount: 93.31,
     OrderItems: "Night Lamp",
@@ -2619,7 +2845,7 @@ export const ordersData = [
     ProductImage: product4,
   },
   {
-    OrderID: 748975,
+    OrderID: 755975,
     CustomerName: "Miron Vitold",
     TotalAmount: 23.99,
     OrderItems: "Healthcare Erbology",
@@ -2629,7 +2855,7 @@ export const ordersData = [
     ProductImage: product1,
   },
   {
-    OrderID: 94757,
+    OrderID: 94457,
     CustomerName: "Omar Darobe",
     TotalAmount: 95.99,
     OrderItems: "Makeup Lancome Rouge",
@@ -2639,7 +2865,7 @@ export const ordersData = [
     ProductImage: product2,
   },
   {
-    OrderID: 944895,
+    OrderID: 944495,
     CustomerName: "Lulia albu",
     TotalAmount: 17.99,
     OrderItems: "Skincare",
@@ -2649,7 +2875,7 @@ export const ordersData = [
     ProductImage: product3,
   },
   {
-    OrderID: 845954,
+    OrderID: 755954,
     CustomerName: "Penjani",
     TotalAmount: 59.99,
     OrderItems: "Headphone",
@@ -2659,7 +2885,7 @@ export const ordersData = [
     ProductImage: product4,
   },
   {
-    OrderID: 845954,
+    OrderID: 842254,
     CustomerName: "Jie Yan",
     TotalAmount: 87.99,
     OrderItems: "Shoes",
@@ -2670,7 +2896,7 @@ export const ordersData = [
       "https://cdn.shopclues.com/images1/thumbnails/104158/320/320/148648730-104158193-1592481791.jpg",
   },
   {
-    OrderID: 874534,
+    OrderID: 855534,
     CustomerName: "Danai",
     TotalAmount: 122.99,
     OrderItems: "Watch",
@@ -2681,7 +2907,7 @@ export const ordersData = [
       "https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/pop-womens-garmin-watches-1641919013.jpg?crop=0.502xw:1.00xh;0.250xw,0&resize=640:*",
   },
   {
-    OrderID: 38489,
+    OrderID: 38444,
     CustomerName: "Miron",
     TotalAmount: 87.99,
     OrderItems: "Ice Cream",
@@ -2692,7 +2918,7 @@ export const ordersData = [
       "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/dairy-free-ice-cream-eae372d.jpg",
   },
   {
-    OrderID: 24546,
+    OrderID: 24544,
     CustomerName: "Frank",
     TotalAmount: 84.99,
     OrderItems: "Pan Cake",
@@ -2703,7 +2929,7 @@ export const ordersData = [
       "https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80",
   },
   {
-    OrderID: 874534,
+    OrderID: 866534,
     CustomerName: "Danai",
     TotalAmount: 122.99,
     OrderItems: "Watch",
