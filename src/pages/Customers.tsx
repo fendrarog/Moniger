@@ -1,54 +1,29 @@
 import React, { useState } from "react";
 import { Header } from "../components";
-import Box from "@mui/material/Box";
 import {
   DataGrid,
   enUS,
   GridColDef,
-  gridPaginationSelector,
   GridSelectionModel,
   ruRU,
-  useGridApiContext,
-  useGridSelector,
 } from "@mui/x-data-grid";
-import Pagination from "@mui/material/Pagination";
 import {
   customersData,
-  ordersGrid,
   renderCustomerGridImage,
   renderCustomerGridStatus,
 } from "../data/dummy";
 import { IconButton } from "@mui/material";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
-
-const CustomPagination = () => {
-  const apiRef = useGridApiContext();
-  const { pageSize, page, pageCount, rowCount } = useGridSelector(
-    apiRef,
-    gridPaginationSelector
-  );
-
-  return (
-    <div className="flex justify-between items-center w-full px-10">
-      <Pagination
-        color="primary"
-        count={pageCount}
-        page={page + 1}
-        onChange={(event, value) => apiRef.current.setPage(value - 1)}
-        showFirstButton
-        showLastButton
-      />
-      <div className="text-sm">
-        {page + 1} of {pageCount} pages ({rowCount} items)
-      </div>
-    </div>
-  );
-};
+import BasicPagination from "../components/BasicPagination";
+import { useStateContext } from "../contexts/ContextProvider";
+import CheckboxWrapper from "../components/Checkbox";
+import { Tooltip } from "@mui/material";
 
 const Customers: React.FC = () => {
+  const { currentMode, currentColor } = useStateContext();
+
   const [customersRows, setCustomersRows] = useState(customersData);
   const [selectionModel, setSelectionModel] = useState<GridSelectionModel>([]);
-  console.log(selectionModel);
 
   const customersGrid: GridColDef[] = [
     {
@@ -127,23 +102,44 @@ const Customers: React.FC = () => {
       disableColumnMenu: true,
       renderHeader: () => {
         return (
-          <IconButton
-            onClick={() => {
-              const selectedIDs = new Set(selectionModel);
-              setCustomersRows((r) =>
-                r.filter((x) => !selectedIDs.has(x.CustomerID))
-              );
-            }}
+          <Tooltip
+            title={
+              <p
+                style={{
+                  fontSize: "12px",
+                  fontWeight: "400",
+                  fontFamily: "Open Sans, sans-serif",
+                }}
+              >
+                Delete selected rows
+              </p>
+            }
+            placement="top"
+            arrow
           >
-            <DeleteOutlinedIcon />
-          </IconButton>
+            <IconButton
+              onClick={() => {
+                const selectedIDs = new Set(selectionModel);
+                setCustomersRows((r) =>
+                  r.filter((x) => !selectedIDs.has(x.CustomerID))
+                );
+              }}
+            >
+              <DeleteOutlinedIcon
+                style={{
+                  color: `${currentColor}`,
+                  animation: "3s infinite alternate slidein",
+                }}
+              />
+            </IconButton>
+          </Tooltip>
         );
       },
     },
   ];
 
   return (
-    <div className="m-2 md:m-10 p-2 md:p-10 bg-white rounded-3xl">
+    <div className="m-2 md:m-10 p-2 md:p-10 bg-white dark:bg-secondary-dark-bg rounded-3xl">
       <Header category="Page" title="Customers" />
 
       <DataGrid
@@ -152,6 +148,10 @@ const Customers: React.FC = () => {
           "&.MuiDataGrid-root .MuiDataGrid-cell:focus-within": {
             outline: "none !important",
           },
+          "& .css-ptiqhd-MuiSvgIcon-root": {
+            fill: `${currentMode === "Light" ? "black" : "white"}`,
+          },
+          color: `${currentMode === "Light" ? "black" : "white"}`,
         }}
         rows={customersRows}
         columns={customersGrid}
@@ -166,7 +166,8 @@ const Customers: React.FC = () => {
         }}
         experimentalFeatures={{ newEditingApi: true }}
         components={{
-          Pagination: CustomPagination,
+          Pagination: BasicPagination,
+          BaseCheckbox: CheckboxWrapper,
         }}
         disableColumnMenu
         disableColumnSelector

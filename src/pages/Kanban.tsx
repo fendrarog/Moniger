@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   DragDropContext,
   Draggable,
@@ -7,13 +7,29 @@ import {
 } from "react-beautiful-dnd";
 import { v4 as uuid } from "uuid";
 import { Header } from "../components";
+import { useStateContext } from "../contexts/ContextProvider";
 
 const itemsFromBackend = [
-  { id: uuid(), content: "First task" },
-  { id: uuid(), content: "Second task" },
-  { id: uuid(), content: "Third task" },
-  { id: uuid(), content: "Fourth task" },
-  { id: uuid(), content: "Fifth task" },
+  {
+    id: uuid(),
+    content: "First task",
+  },
+  {
+    id: uuid(),
+    content: "Second task",
+  },
+  {
+    id: uuid(),
+    content: "Third task",
+  },
+  {
+    id: uuid(),
+    content: "Fourth task",
+  },
+  {
+    id: uuid(),
+    content: "Fifth task",
+  },
 ];
 
 const columnsFromBackend = {
@@ -77,15 +93,43 @@ const onDragEnd = (
 };
 
 const Kanban: React.FC = () => {
+  const { currentColor } = useStateContext();
+
   const [columns, setColumns] = useState(columnsFromBackend);
+  const [lilWidth, setLilWidth] = useState(false);
+
+  const { screenSize, setScreenSize } = useStateContext();
+
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenSize(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    handleResize();
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, [setScreenSize]);
+
+  useEffect(() => {
+    if (screenSize) {
+      if (screenSize >= 1406 && screenSize < 1730) {
+        setLilWidth(true);
+      } else {
+        setLilWidth(false);
+      }
+    }
+  }, [screenSize]);
+
   return (
-    <div className="m-2 md:m-10 p-2 md:p-10 bg-white rounded-3xl">
+    <div className="m-2 md:m-10 p-2 md:p-10 bg-white dark:bg-secondary-dark-bg rounded-3xl h-screen">
       <Header category="Page" title="Kanban" />
       <div
         style={{
           display: "flex",
           justifyContent: "center",
-          flexWrap: "wrap",
+          flexWrap: screenSize! >= 1406 ? "nowrap" : "wrap",
           height: "100%",
         }}
       >
@@ -99,13 +143,16 @@ const Kanban: React.FC = () => {
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
-                  flex: "0 0 15%",
+                  flex: lilWidth ? "0 0 190px" : "0 0 300px",
                   margin: 10,
+                  maxWidth: lilWidth ? 190 : 300,
                 }}
                 key={columnId}
               >
-                <h2>{column.name}</h2>
-                <div style={{ margin: 8, width: "100%", }}>
+                <h2 className="font-semibold text-slate-900 dark:text-slate-200">
+                  {column.name}
+                </h2>
+                <div style={{ margin: 8, width: "100%" }}>
                   <Droppable droppableId={columnId} key={columnId}>
                     {(provided, snapshot) => {
                       return (
@@ -114,11 +161,11 @@ const Kanban: React.FC = () => {
                           ref={provided.innerRef}
                           style={{
                             background: snapshot.isDraggingOver
-                              ? "lightblue"
-                              : "lightgrey",
-                            padding: 4,
+                              ? "#E7E5E4"
+                              : "#F5F5F4",
+                            padding: 8,
                             paddingBottom: 50,
-                            
+                            borderRadius: 10,
                             minHeight: "100%",
                           }}
                         >
@@ -140,11 +187,10 @@ const Kanban: React.FC = () => {
                                         padding: 16,
                                         margin: "0 0 8px 0",
                                         minHeight: "50px",
-                                        
-                                        backgroundColor: snapshot.isDragging
-                                          ? "#263B4A"
-                                          : "#456C86",
+                                        borderRadius: 10,
+                                        backgroundColor: `${currentColor}`,
                                         color: "white",
+                                        opacity: snapshot.isDragging ? 1 : 0.9,
                                         ...provided.draggableProps.style,
                                       }}
                                     >

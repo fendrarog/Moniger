@@ -6,8 +6,11 @@ import {
 } from "../data/dummy";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import { Button, SparkLine, Stacked } from "../components";
+import { useStateContext } from "../contexts/ContextProvider";
 
 const Ecommerce: React.FC = () => {
+  const { currentColor } = useStateContext();
+
   return (
     <div className="mt-12">
       <div className="flex flex-wrap lg:flex-nowrap justify-center">
@@ -21,7 +24,7 @@ const Ecommerce: React.FC = () => {
           <div className="mt-6">
             <Button
               color="white"
-              bgColor="blue"
+              bgColor={currentColor}
               text="Download"
               borderRadius="10px"
               size="lg"
@@ -93,17 +96,17 @@ const Ecommerce: React.FC = () => {
 
               <div className="mt-5">
                 <SparkLine
-                  currentColor="blue"
+                  currentColor={currentColor}
                   height={80}
                   width={250}
                   data={sparklineAreaData}
-                  color="blue"
+                  color={currentColor}
                 />
               </div>
               <div className="mt-10">
                 <Button
                   color="white"
-                  bgColor="blue"
+                  bgColor={currentColor}
                   text="Download Report"
                   borderRadius="10px"
                   size="lg"

@@ -49,6 +49,7 @@ import {
 } from "@mui/x-data-grid";
 import { Avatar, Badge, IconButton, styled } from "@mui/material";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 
 export const renderGridOrderImage = (props: GridRenderCellParams) => {
   return (
@@ -102,7 +103,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
       height: "100%",
       borderRadius: "50%",
       animation: "ripple 1.2s infinite ease-in-out",
-      border: "1px solid currentColor",
+      border: "1px solid #44b700",
       content: '""',
     },
   },
@@ -138,7 +139,7 @@ const renderGridEmployeeProfile = (props: GridRenderCellParams) => (
 
 const renderGridEmployeeCountry = (props: GridRenderCellParams) => (
   <div className="flex items-center justify-center gap-2">
-    <GrLocation />
+    <LocationOnOutlinedIcon sx={{ fontSize: "18px" }} />
     <span>{props.row.Country}</span>
   </div>
 );
@@ -214,7 +215,7 @@ export const renderCustomerGridStatus = (props: GridRenderCellParams) => (
       style={{ background: props.row.StatusBg }}
       className="rounded-full h-3 w-3"
     />
-    <p>{props.row.Status}</p>
+    <p className="dark:text-gray-200">{props.row.Status}</p>
   </div>
 );
 export const areaPrimaryXAxis = {

@@ -1,73 +1,53 @@
 import React from "react";
 import { Header } from "../components";
-import Box from "@mui/material/Box";
 import {
   DataGrid,
   enUS,
-  gridPageCountSelector,
-  gridPageSelector,
-  gridPageSizeSelector,
-  gridPaginationRowRangeSelector,
-  gridPaginationSelector,
-  GridRowHeightParams,
-  GridToolbar,
   GridToolbarContainer,
   GridToolbarExport,
   GridToolbarFilterButton,
-  GridToolbarQuickFilter,
   ruRU,
-  useGridApiContext,
-  useGridSelector,
 } from "@mui/x-data-grid";
-import Pagination from "@mui/material/Pagination";
 import { ordersData, ordersGrid } from "../data/dummy";
+import BasicPagination from "../components/BasicPagination";
+import { useStateContext } from "../contexts/ContextProvider";
 
 const CustomToolbar = () => {
+  const { currentColor } = useStateContext();
+
   return (
     <GridToolbarContainer className="flex justify-between">
       <div>
-        <GridToolbarFilterButton />
-        <GridToolbarExport />
+        <GridToolbarFilterButton style={{ color: `${currentColor}` }} />
+        <GridToolbarExport style={{ color: `${currentColor}` }} />
       </div>
     </GridToolbarContainer>
   );
 };
 
-const CustomPagination = () => {
-  const apiRef = useGridApiContext();
-  const { pageSize, page, pageCount, rowCount } = useGridSelector(
-    apiRef,
-    gridPaginationSelector
-  );
-
-  return (
-    <div className="flex justify-between items-center w-full px-10">
-      <Pagination
-        color="primary"
-        count={pageCount}
-        page={page + 1}
-        onChange={(event, value) => apiRef.current.setPage(value - 1)}
-        showFirstButton
-        showLastButton
-      />
-      <div className="text-sm">
-        {page + 1} of {pageCount} pages ({rowCount} items)
-      </div>
-    </div>
-  );
-};
-
 const Orders: React.FC = () => {
+  const { currentMode } = useStateContext();
+
   return (
-    <div className="m-2 md:m-10 p-2 md:p-10 bg-white rounded-3xl">
+    <div className="m-2 md:m-10 p-2 md:p-10 bg-white dark:bg-secondary-dark-bg rounded-3xl">
       <Header category="Page" title="Orders" />
 
       <DataGrid
-        localeText={enUS.components.MuiDataGrid.defaultProps.localeText}
+        localeText={
+          (enUS.components.MuiDataGrid.defaultProps.localeText,
+          {
+            toolbarFilters: "filter",
+            toolbarExport: "Download or print",
+          })
+        }
         sx={{
           "&.MuiDataGrid-root .MuiDataGrid-cell:focus-within": {
             outline: "none !important",
           },
+          "& .css-ptiqhd-MuiSvgIcon-root": {
+            fill: `${currentMode === "Light" ? "black" : "white"}`,
+          },
+          color: `${currentMode === "Light" ? "black" : "white"}`,
         }}
         rows={ordersData}
         columns={ordersGrid}
@@ -80,7 +60,7 @@ const Orders: React.FC = () => {
         experimentalFeatures={{ newEditingApi: true }}
         components={{
           Toolbar: CustomToolbar,
-          Pagination: CustomPagination,
+          Pagination: BasicPagination,
         }}
         disableColumnMenu
         disableColumnSelector

@@ -5,12 +5,7 @@ import { store } from "./app/store";
 import App from "./App";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
-import { registerLicense } from "@syncfusion/ej2-base";
 import { ContextProvider } from "./contexts/ContextProvider";
-
-registerLicense(
-  "ORg4AjUWIQA/Gnt2VVhiQlFaclpJXGFWfVJpTGpQdk5xdV9DaVZUTWY/P1ZhSXxRdk1hUX5WdXdQQ2lYUkw="
-);
 
 const container = document.getElementById("root")!;
 const root = createRoot(container);

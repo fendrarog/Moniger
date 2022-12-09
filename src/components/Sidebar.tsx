@@ -7,7 +7,8 @@ import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import { useStateContext } from "../contexts/ContextProvider";
 
 const Sidebar: React.FC = () => {
-  const { activeMenu, setActiveMenu, screenSize } = useStateContext();
+  const { activeMenu, setActiveMenu, screenSize, currentColor } =
+    useStateContext();
 
   const handleCloseSideBar = () => {
     if (screenSize) {
@@ -69,6 +70,9 @@ const Sidebar: React.FC = () => {
                     to={`/${link.name}`}
                     key={link.name}
                     onClick={handleCloseSideBar}
+                    style={({ isActive }) => ({
+                      backgroundColor: isActive ? currentColor : "",
+                    })}
                     className={({ isActive }) =>
                       isActive ? activeLink : normalLink
                     }

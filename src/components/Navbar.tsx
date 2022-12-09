@@ -61,13 +61,12 @@ const NavButton: React.FC<NavButtonProps> = ({
 
 const Navbar: React.FC = () => {
   const {
-    activeMenu,
     setActiveMenu,
     isClicked,
-    setIsClicked,
     handleClick,
     screenSize,
     setScreenSize,
+    currentColor,
   } = useStateContext();
 
   useEffect(() => {
@@ -97,28 +96,28 @@ const Navbar: React.FC = () => {
       <NavButton
         title="Menu"
         customFunc={() => setActiveMenu((prevActiveMenu) => !prevActiveMenu)}
-        color="blue"
+        color={currentColor}
         icon={<MenuOutlinedIcon />}
       />
       <div className="flex">
         <NavButton
           title="Cart"
           customFunc={() => handleClick("cart")}
-          color="blue"
+          color={currentColor}
           icon={<ShoppingCartOutlinedIcon />}
         />
         <NavButton
           title="Chat"
           dotColor="#03C9D7"
           customFunc={() => handleClick("chat")}
-          color="blue"
+          color={currentColor}
           icon={<ChatBubbleOutlineOutlinedIcon />}
         />
         <NavButton
           title="Notification"
           dotColor="#03C9D7"
           customFunc={() => handleClick("notification")}
-          color="blue"
+          color={currentColor}
           icon={<NotificationsOutlinedIcon />}
         />
         <Tooltip title="Profile" placement="bottom" arrow>
