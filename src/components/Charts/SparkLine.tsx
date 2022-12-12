@@ -3,22 +3,30 @@ import { LineChart, Line, Tooltip, YAxis } from "recharts";
 
 // Типизировать CustomTooltip
 
+const tooltipWidth = 100;
+
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active) {
     return (
-      <div
-        style={{
-          borderRadius: "0.25em",
-          backgroundColor: "#000",
-          color: "#fff",
-          opacity: "0.6",
-          padding: "0.25rem 0.5rem",
-          boxShadow: "5px 5px 10px 5px rgba(0, 0, 0, 0.5)",
-          textAlign: "center",
-        }}
-      >
-        <h4>{`${label} : data ${payload[0].value}`}</h4>
-      </div>
+      <>
+        <div
+          style={{
+            width: `${tooltipWidth}px`,
+            borderRadius: "0.25em",
+            backgroundColor: "#000",
+            color: "#fff",
+            opacity: "0.8",
+            padding: "0.3rem 0.5rem",
+            boxShadow: "5px 5px 10px 5px rgba(0, 0, 0, 0.5)",
+            textAlign: "center",
+          }}
+        >
+          <p className="flex justify-center items-center py-1">
+            <span className="text-gray-300">{`${label} :`}</span>
+            <span className="ml-1 font-semibold">{`${payload[0].value}`}</span>
+          </p>
+        </div>
+      </>
     );
   }
   return null;

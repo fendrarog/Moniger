@@ -27,13 +27,13 @@ const CustomToolbar = () => {
             borderBottom: `2px solid ${currentColor}`,
           },
           "& .MuiInput-underline:before": {
-            borderBottom: `0.5px solid ${
-              currentMode === "Light" ? "#3F3F46" : "#A1A1AA"
+            borderBottom: `1px solid ${
+              currentMode === "Light" ? "#A3A3A3" : "#D4D4D4"
             }`,
           },
           "& .css-1ptx2yq-MuiInputBase-root-MuiInput-root:hover:before": {
             borderBottom: `2px solid ${
-              currentMode === "Light" ? "black" : "white"
+              currentMode === "Light" ? "#52525B" : "#E5E5E5"
             }`,
           },
         }}
@@ -46,37 +46,39 @@ const Employees: React.FC = () => {
   const { currentMode } = useStateContext();
 
   return (
-    <div className="m-2 md:m-10 p-2 md:p-10 bg-white dark:bg-secondary-dark-bg rounded-3xl">
-      <Header category="Page" title="Employees" />
+    <div className="p-2 md:p-10 dark:bg-[#20232a]">
+      <div className="p-2 md:p-10 bg-white dark:bg-secondary-dark-bg rounded-3xl">
+        <Header category="Page" title="Employees" />
 
-      <DataGrid
-        localeText={enUS.components.MuiDataGrid.defaultProps.localeText}
-        sx={{
-          "& .MuiDataGrid-root .MuiDataGrid-cell:focus-within": {
-            outline: "none !important",
-          },
-          "& .css-ptiqhd-MuiSvgIcon-root": {
-            fill: `${currentMode === "Light" ? "black" : "white"}`,
-          },
-          color: `${currentMode === "Light" ? "black" : "white"}`,
-        }}
-        rows={employeesData}
-        columns={employeesGrid}
-        rowHeight={70}
-        loading={!employeesData.length}
-        getRowId={(row) => row.EmployeeID}
-        pageSize={12}
-        rowsPerPageOptions={[12]}
-        disableSelectionOnClick
-        experimentalFeatures={{ newEditingApi: true }}
-        components={{
-          Toolbar: CustomToolbar,
-          Pagination: BasicPagination,
-        }}
-        disableColumnMenu
-        disableColumnSelector
-        autoHeight
-      />
+        <DataGrid
+          localeText={enUS.components.MuiDataGrid.defaultProps.localeText}
+          sx={{
+            "&.MuiDataGrid-root *:focus-within": {
+              outline: "none !important",
+            },
+            "& .css-ptiqhd-MuiSvgIcon-root": {
+              fill: `${currentMode === "Light" ? "black" : "white"}`,
+            },
+            color: `${currentMode === "Light" ? "black" : "white"}`,
+          }}
+          rows={employeesData}
+          columns={employeesGrid}
+          rowHeight={70}
+          loading={!employeesData.length}
+          getRowId={(row) => row.EmployeeID}
+          pageSize={12}
+          rowsPerPageOptions={[12]}
+          disableSelectionOnClick
+          experimentalFeatures={{ newEditingApi: true }}
+          components={{
+            Toolbar: CustomToolbar,
+            Pagination: BasicPagination,
+          }}
+          disableColumnMenu
+          disableColumnSelector
+          autoHeight
+        />
+      </div>
     </div>
   );
 };

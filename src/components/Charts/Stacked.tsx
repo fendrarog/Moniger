@@ -11,6 +11,8 @@ import {
 } from "recharts";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
 import { TooltipProps } from "recharts/types/component/Tooltip";
+import { Tooltip as TooltipMui } from "@mui/material";
+import { useStateContext } from "../../contexts/ContextProvider";
 
 const findDataMin = (data: StackedProps["data"]): number => {
   const filteredData = data.map((item) => item[Object.keys(item)[1]] as number);
@@ -33,6 +35,8 @@ interface StackedProps {
 }
 
 const Stacked: React.FC<StackedProps> = ({ width, height, data }) => {
+  const { currentMode } = useStateContext();
+
   const [processedData, setProcessedData] = useState(data);
   const [posData, setPosData] = useState({ x: 0, y: 0, width: 0 });
   const [clickNumber, setСlickNumber] = useState({ y: 0, z: 0 });
@@ -69,7 +73,7 @@ const Stacked: React.FC<StackedProps> = ({ width, height, data }) => {
               <>
                 <p className="pb-1 border-b-1 font-semibold">Expense</p>
                 <p className="flex items-center mt-1">
-                  <span className="flex text-xs text-gray-600">
+                  <span className="flex text-xs text-gray-600 dark:text-gray-400">
                     <FiberManualRecordIcon fontSize="inherit" />
                   </span>
                   <span className="ml-1 text-gray-300">{`${label} :`}</span>
@@ -111,9 +115,9 @@ const Stacked: React.FC<StackedProps> = ({ width, height, data }) => {
 
   const handleClick = (o: any) => {
     const { dataKey } = o;
-    console.log(o);
+    /* console.log(o);
     console.log(`Expense --- ${clickNumber[Object.keys(clickNumber)[1]]}`);
-    console.log(`Budget --- ${clickNumber[Object.keys(clickNumber)[0]]}`);
+    console.log(`Budget --- ${clickNumber[Object.keys(clickNumber)[0]]}`); */
 
     const handleData = (item: DataItem) => {
       let processedItem = {} as DataItem;
@@ -157,7 +161,7 @@ const Stacked: React.FC<StackedProps> = ({ width, height, data }) => {
 
   const handleMouseOver = (data: any, index: number) => {
     setActiveIndex({ [data.tooltipPayload[0].id]: index });
-    console.log([data.tooltipPayload[0].id]);
+    /* console.log([data.tooltipPayload[0].id]); */
   };
 
   const dataMin = useMemo(() => findDataMin(processedData), [processedData]);
@@ -166,8 +170,14 @@ const Stacked: React.FC<StackedProps> = ({ width, height, data }) => {
     <div className="text-xs">
       <BarChart width={width} height={height} data={processedData}>
         <CartesianGrid opacity={0.7} vertical={false} />
-        <XAxis dataKey="x" tickLine={false} opacity={0.7} />
+        <XAxis
+          tick={{ fill: `${currentMode === "Dark" && "rgb(199, 207, 214)"}` }}
+          dataKey="x"
+          tickLine={false}
+          opacity={0.7}
+        />
         <YAxis
+          tick={{ fill: `${currentMode === "Dark" && "rgb(199, 207, 214)"}` }}
           axisLine={false}
           tickLine={false}
           allowDataOverflow={true}
@@ -197,30 +207,61 @@ const Stacked: React.FC<StackedProps> = ({ width, height, data }) => {
         <Legend
           formatter={(value: keyof DataItem, entry, index) => {
             const { color } = entry;
-            console.log(entry);
 
             if (value === "z") {
               const opacity =
                 clickNumber[Object.keys(clickNumber)[1]] % 2 ? 0.5 : 1;
               return (
-                <span
-                  className="hover:drop-shadow-xl cursor-pointer"
-                  style={{ color, opacity }}
+                <TooltipMui
+                  title={
+                    <p
+                      style={{
+                        fontSize: "12px",
+                        fontWeight: "400",
+                        fontFamily: "Open Sans, sans-serif",
+                      }}
+                    >
+                      Show Expense
+                    </p>
+                  }
+                  placement="bottom"
+                  arrow
                 >
-                  Expense
-                </span>
+                  <span
+                    className="hover:drop-shadow-xl cursor-pointer"
+                    style={{ color, opacity }}
+                  >
+                    Expense
+                  </span>
+                </TooltipMui>
               );
             }
             if (value === "y") {
               const opacity =
                 clickNumber[Object.keys(clickNumber)[0]] % 2 ? 0.5 : 1;
               return (
-                <span
-                  className="hover:drop-shadow-xl cursor-pointer"
-                  style={{ color, opacity }}
+                <TooltipMui
+                  title={
+                    <p
+                      style={{
+                        fontSize: "12px",
+                        fontWeight: "400",
+                        fontFamily: "Open Sans, sans-serif",
+                      }}
+                    >
+                      Show Budget
+                    </p>
+                  }
+                  placement="bottom"
+                  arrow
                 >
-                  Budget
-                </span>
+                  <span
+                    className="hover:drop-shadow-xl cursor-pointer"
+                    style={{ color, opacity }}
+                  >
+                    Budget
+                  </span>
+                </TooltipMui>
               );
             }
           }}
@@ -266,7 +307,9 @@ const Stacked: React.FC<StackedProps> = ({ width, height, data }) => {
           }}
           dataKey="z"
           stackId="a"
-          fill="rgb(75 85 99)"
+          fill={`${
+            currentMode === "Light" ? "rgb(75 85 99)" : "rgb(156,163,175)"
+          }`}
         >
           {processedData.map((entry, index) => (
             <Cell

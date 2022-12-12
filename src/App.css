@@ -13,6 +13,73 @@
   }
 }
 
+@keyframes vibration {
+  5% {
+    transform: translate(-4px, 0) rotate(-10deg);
+  }
+  10% {
+    transform: translate(4px, 0) rotate(10deg);
+  }
+  15% {
+    transform: translate(-4px, 0) rotate(-10deg);
+  }
+  20% {
+    transform: translate(4px, 0) rotate(10deg);
+  }
+  25% {
+    transform: translate(-4px, 0) rotate(-10deg);
+  }
+  30% {
+    transform: translate(4px, 0) rotate(10deg);
+  }
+  35% {
+    transform: translate(-4px, 0) rotate(-10deg);
+  }
+  40% {
+    transform: translate(4px, 0) rotate(10deg);
+  }
+  45% {
+    transform: translate(-4px, 0) rotate(-10deg);
+  }
+  50% {
+    transform: translate(4px, 0) rotate(10deg);
+  }
+  55% {
+    transform: none;
+    transform: none;
+  }
+}
+.delete-customers {
+  animation: 3s infinite linear vibration;
+}
+
+@keyframes kanban-add-todo-icon-button {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+.kanban-add-todo-icon-animation {
+  animation: 1s 1 linear kanban-add-todo-icon-button;
+}
+
+@keyframes kanban-add-todo-button {
+  20% {
+    padding: 12px;
+    margin: 0;
+  }
+  40% {
+    padding: 12px;
+    margin: 0;
+    min-width: 200px;
+  }
+}
+.kanban-add-todo-animation {
+ 
+}
+
 .e-dlg-center-center,
 .e-quick-popup-wrapper.e-device {
   z-index: 1000000 !important;

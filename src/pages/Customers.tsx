@@ -126,9 +126,9 @@ const Customers: React.FC = () => {
               }}
             >
               <DeleteOutlinedIcon
+                className={`${selectionModel.length && "delete-customers"}`}
                 style={{
                   color: `${currentColor}`,
-                  animation: "3s infinite alternate slidein",
                 }}
               />
             </IconButton>
@@ -139,40 +139,42 @@ const Customers: React.FC = () => {
   ];
 
   return (
-    <div className="m-2 md:m-10 p-2 md:p-10 bg-white dark:bg-secondary-dark-bg rounded-3xl">
-      <Header category="Page" title="Customers" />
+    <div className="p-2 md:p-10 dark:bg-[#20232a]">
+      <div className="p-2 md:p-10 bg-white dark:bg-secondary-dark-bg rounded-3xl">
+        <Header category="Page" title="Customers" />
 
-      <DataGrid
-        localeText={enUS.components.MuiDataGrid.defaultProps.localeText}
-        sx={{
-          "&.MuiDataGrid-root .MuiDataGrid-cell:focus-within": {
-            outline: "none !important",
-          },
-          "& .css-ptiqhd-MuiSvgIcon-root": {
-            fill: `${currentMode === "Light" ? "black" : "white"}`,
-          },
-          color: `${currentMode === "Light" ? "black" : "white"}`,
-        }}
-        rows={customersRows}
-        columns={customersGrid}
-        rowHeight={100}
-        loading={!customersRows.length}
-        getRowId={(row) => row.CustomerID}
-        pageSize={12}
-        rowsPerPageOptions={[12]}
-        checkboxSelection
-        onSelectionModelChange={(ids) => {
-          setSelectionModel(ids);
-        }}
-        experimentalFeatures={{ newEditingApi: true }}
-        components={{
-          Pagination: BasicPagination,
-          BaseCheckbox: CheckboxWrapper,
-        }}
-        disableColumnMenu
-        disableColumnSelector
-        autoHeight
-      />
+        <DataGrid
+          localeText={enUS.components.MuiDataGrid.defaultProps.localeText}
+          sx={{
+            "&.MuiDataGrid-root *:focus-within": {
+              outline: "none !important",
+            },
+            "& .css-ptiqhd-MuiSvgIcon-root": {
+              fill: `${currentMode === "Light" ? "black" : "white"}`,
+            },
+            color: `${currentMode === "Light" ? "black" : "white"}`,
+          }}
+          rows={customersRows}
+          columns={customersGrid}
+          rowHeight={100}
+          loading={!customersRows.length}
+          getRowId={(row) => row.CustomerID}
+          pageSize={12}
+          rowsPerPageOptions={[12]}
+          checkboxSelection
+          onSelectionModelChange={(ids) => {
+            setSelectionModel(ids);
+          }}
+          experimentalFeatures={{ newEditingApi: true }}
+          components={{
+            Pagination: BasicPagination,
+            BaseCheckbox: CheckboxWrapper,
+          }}
+          disableColumnMenu
+          disableColumnSelector
+          autoHeight
+        />
+      </div>
     </div>
   );
 };

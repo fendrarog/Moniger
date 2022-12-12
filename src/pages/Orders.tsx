@@ -29,43 +29,45 @@ const Orders: React.FC = () => {
   const { currentMode } = useStateContext();
 
   return (
-    <div className="m-2 md:m-10 p-2 md:p-10 bg-white dark:bg-secondary-dark-bg rounded-3xl">
-      <Header category="Page" title="Orders" />
+    <div className="p-2 md:p-10 dark:bg-[#20232a]">
+      <div className="p-2 md:p-10 bg-white dark:bg-secondary-dark-bg rounded-3xl">
+        <Header category="Page" title="Orders" />
 
-      <DataGrid
-        localeText={
-          (enUS.components.MuiDataGrid.defaultProps.localeText,
-          {
-            toolbarFilters: "filter",
-            toolbarExport: "Download or print",
-          })
-        }
-        sx={{
-          "&.MuiDataGrid-root .MuiDataGrid-cell:focus-within": {
-            outline: "none !important",
-          },
-          "& .css-ptiqhd-MuiSvgIcon-root": {
-            fill: `${currentMode === "Light" ? "black" : "white"}`,
-          },
-          color: `${currentMode === "Light" ? "black" : "white"}`,
-        }}
-        rows={ordersData}
-        columns={ordersGrid}
-        rowHeight={100}
-        loading={!ordersData.length}
-        getRowId={(row) => row.OrderID}
-        pageSize={12}
-        rowsPerPageOptions={[12]}
-        disableSelectionOnClick
-        experimentalFeatures={{ newEditingApi: true }}
-        components={{
-          Toolbar: CustomToolbar,
-          Pagination: BasicPagination,
-        }}
-        disableColumnMenu
-        disableColumnSelector
-        autoHeight
-      />
+        <DataGrid
+          localeText={
+            (enUS.components.MuiDataGrid.defaultProps.localeText,
+            {
+              toolbarFilters: "filter",
+              toolbarExport: "Download or print",
+            })
+          }
+          sx={{
+            "&.MuiDataGrid-root *:focus-within": {
+              outline: "none !important",
+            },
+            "& .css-ptiqhd-MuiSvgIcon-root": {
+              fill: `${currentMode === "Light" ? "black" : "white"}`,
+            },
+            color: `${currentMode === "Light" ? "black" : "white"}`,
+          }}
+          rows={ordersData}
+          columns={ordersGrid}
+          rowHeight={100}
+          loading={!ordersData.length}
+          getRowId={(row) => row.OrderID}
+          pageSize={12}
+          rowsPerPageOptions={[12]}
+          disableSelectionOnClick
+          experimentalFeatures={{ newEditingApi: true }}
+          components={{
+            Toolbar: CustomToolbar,
+            Pagination: BasicPagination,
+          }}
+          disableColumnMenu
+          disableColumnSelector
+          autoHeight
+        />
+      </div>
     </div>
   );
 };
