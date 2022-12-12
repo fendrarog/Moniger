@@ -25,13 +25,8 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { useStateContext } from "./contexts/ContextProvider";
 
 const App: React.FC = () => {
-  const {
-    activeMenu,
-    themeSettings,
-    setThemeSettings,
-    currentColor,
-    currentMode,
-  } = useStateContext();
+  const { activeMenu, setThemeSettings, currentColor, currentMode } =
+    useStateContext();
 
   return (
     <div className={currentMode === "Dark" ? "dark" : ""}>
@@ -63,17 +58,17 @@ const App: React.FC = () => {
               </button>
             </Tooltip>
           </div>
-          {activeMenu ? (
-            <div className="w-72 fixed sidebar dark:bg-secondary-dark-bg bg-white">
-              <Sidebar />
-            </div>
-          ) : (
-            <div className="w-0 dark:bg-secondary-dark-bg">
-              <Sidebar />
-            </div>
-          )}
+
           <div
-            className={`dark:bg-main-bg bg-main-bg min-h-screen w-full ${
+            className={`transition-[left] ease-linear duration-200 w-72 ${
+              activeMenu ? "left-0" : "left-[-18rem]"
+            } fixed sidebar dark:bg-secondary-dark-bg bg-white`}
+          >
+            <Sidebar />
+          </div>
+
+          <div
+            className={`transition-[margin] ease-linear duration-200 dark:bg-main-bg bg-main-bg min-h-screen w-full ${
               activeMenu ? "md:ml-72" : "flex-2"
             }`}
           >
@@ -82,7 +77,7 @@ const App: React.FC = () => {
             </div>
 
             <div>
-              {themeSettings && <ThemeSettings />}
+              <ThemeSettings />
               <Routes>
                 {/* Dashboard */}
                 <Route path="/" element={<Ecommerce />} />

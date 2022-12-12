@@ -6,12 +6,25 @@ import { Tooltip } from "@mui/material";
 import { useStateContext } from "../contexts/ContextProvider";
 
 const ThemeSettings: React.FC = () => {
-  const { currentColor, setColor, currentMode, setMode, setThemeSettings } =
-    useStateContext();
+  const {
+    currentColor,
+    setColor,
+    currentMode,
+    setMode,
+    setThemeSettings,
+    themeSettings,
+  } = useStateContext();
 
   return (
-    <div className="bg-half-transparent w-screen fixed nav-item top-0 right-0">
-      <div className="float-right h-screen dark:text-gray-200 bg-white dark:[#484B52] w-400">
+    <>
+      {themeSettings && (
+        <div className="modal-block bg-half-transparent w-screen fixed top-0 right-0 bottom-0 left-0 z-50"></div>
+      )}
+      <div
+        className={`w-400 h-screen dark:text-gray-200 bg-white dark:bg-[#484B52]  fixed nav-item transition-[right] ease-linear duration-200 top-0 ${
+          themeSettings ? "right-0" : "right-[-400px]"
+        }`}
+      >
         <div className="flex justify-between items-center p-4 ml-4">
           <p className="font-semibold text-xl">Settings</p>
           <button
@@ -68,6 +81,7 @@ const ThemeSettings: React.FC = () => {
                       fontSize: "12px",
                       fontWeight: "400",
                       fontFamily: "Open Sans, sans-serif",
+                      textTransform: "capitalize",
                     }}
                   >
                     {item.name}
@@ -99,7 +113,7 @@ const ThemeSettings: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
