@@ -5,7 +5,7 @@ import {
   PayloadAction,
 } from "@reduxjs/toolkit";
 import { RootState, AppThunk } from "../app/store";
-import { fetchCount } from "./counterAPI";
+import { fetchCount } from "./kanbanAPI";
 import { v4 as uuid } from "uuid";
 
 export interface KanbanState {
@@ -86,10 +86,13 @@ export const kanbanSlice = createSlice({
       let obj = state.columnsFromBackend;
       obj[Object.keys(obj)[0]].items.push({
         id: uuid(),
-        content: `${obj[Object.keys(obj)[0]].items.length + 1} task`,
+        content: `${Object.values(obj).reduce(
+          (acc, curr) => acc + curr.items.length,
+          1
+        )} task`,
       });
 
-      console.log(obj);
+      console.log(Object.values(obj));
     },
     refreshColumns: (
       state,
@@ -124,7 +127,8 @@ export const kanbanSlice = createSlice({
   },
 });
 
-export const { addTodo, refreshColumns, incrementByAmount } = kanbanSlice.actions;
+export const { addTodo, refreshColumns, incrementByAmount } =
+  kanbanSlice.actions;
 
 export const columnsFromBackend = (state: RootState) =>
   state.kanban.columnsFromBackend;

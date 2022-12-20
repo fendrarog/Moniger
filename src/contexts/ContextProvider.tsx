@@ -39,8 +39,12 @@ export const ContextProvider = ({ children }: ContextProviderProps) => {
   const [activeMenu, setActiveMenu] = useState(true);
   const [isClicked, setIsClicked] = useState(initialState);
   const [screenSize, setScreenSize] = useState<number | undefined>(undefined);
-  const [currentColor, setCurrentColor] = useState("#03C9D7");
-  const [currentMode, setCurrentMode] = useState("Light");
+  const [currentColor, setCurrentColor] = useState(
+    localStorage.getItem("colorMode") || "#03C9D7"
+  );
+  const [currentMode, setCurrentMode] = useState(
+    localStorage.getItem("themeMode") || "Light"
+  );
   const [themeSettings, setThemeSettings] = useState(false);
 
   const setMode = (e: React.ChangeEvent<HTMLInputElement>) => {

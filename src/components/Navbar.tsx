@@ -83,7 +83,7 @@ const Navbar: React.FC = () => {
 
   useEffect(() => {
     if (screenSize) {
-      if (screenSize <= 900) {
+      if (screenSize < 1280) {
         setActiveMenu(false);
       } else {
         setActiveMenu(true);

@@ -20,45 +20,16 @@ import {
   Pyramid,
   Stacked,
 } from "./pages";
-import { Tooltip } from "@mui/material";
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { useStateContext } from "./contexts/ContextProvider";
+import ModalBlock from "./components/ModalBlock";
 
 const App: React.FC = () => {
-  const { activeMenu, setThemeSettings, currentColor, currentMode } =
-    useStateContext();
+  const { activeMenu, currentMode, themeSettings } = useStateContext();
 
   return (
     <div className={currentMode === "Dark" ? "dark" : ""}>
       <BrowserRouter>
         <div className="flex relative dark:bg-main-dark-bg">
-          <div className="fixed right-4 bottom-4" style={{ zIndex: "1000" }}>
-            <Tooltip
-              title={
-                <p
-                  style={{
-                    fontSize: "12px",
-                    fontWeight: "400",
-                    fontFamily: "Open Sans, sans-serif",
-                  }}
-                >
-                  Settings
-                </p>
-              }
-              placement="left"
-              arrow
-            >
-              <button
-                type="button"
-                className="p-3 hover:drop-shadow-xl hover:bg-light-gray text-white duration-300"
-                style={{ background: `${currentColor}`, borderRadius: "50%" }}
-                onClick={() => setThemeSettings(true)}
-              >
-                <SettingsOutlinedIcon sx={{ fontSize: 30 }} />
-              </button>
-            </Tooltip>
-          </div>
-
           <div
             className={`transition-[left] ease-linear duration-200 w-72 ${
               activeMenu ? "left-0" : "left-[-18rem]"
@@ -69,7 +40,7 @@ const App: React.FC = () => {
 
           <div
             className={`transition-[margin] ease-linear duration-200 dark:bg-main-bg bg-main-bg min-h-screen w-full ${
-              activeMenu ? "md:ml-72" : "flex-2"
+              activeMenu ? "xl:ml-72" : "flex-2"
             }`}
           >
             <div className="fixed md:static bg-main-bg dark:bg-main-dark-bg navbar w-full">
@@ -77,6 +48,7 @@ const App: React.FC = () => {
             </div>
 
             <div>
+              <ModalBlock />
               <ThemeSettings />
               <Routes>
                 {/* Dashboard */}

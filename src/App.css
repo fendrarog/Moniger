@@ -7,7 +7,9 @@
 .navbar {
   z-index: 100;
 }
-@media screen and (max-width: 800px) {
+
+
+@media screen and (max-width: 1280px) {
   .sidebar {
     z-index: 1000;
   }
@@ -51,33 +53,6 @@
 }
 .delete-customers {
   animation: 3s infinite linear vibration;
-}
-
-@keyframes kanban-add-todo-icon-button {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(-360deg);
-  }
-}
-.kanban-add-todo-icon-animation {
-  animation: 1s 1 linear kanban-add-todo-icon-button;
-}
-
-@keyframes kanban-add-todo-button {
-  20% {
-    padding: 12px;
-    margin: 0;
-  }
-  40% {
-    padding: 12px;
-    margin: 0;
-    min-width: 200px;
-  }
-}
-.kanban-add-todo-animation {
- 
 }
 
 .e-dlg-center-center,

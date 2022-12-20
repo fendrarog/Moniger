@@ -5,16 +5,20 @@ import {
   stackedChartData,
 } from "../data/dummy";
 import FiberManualRecordIcon from "@mui/icons-material/FiberManualRecord";
-import { Button, SparkLine, Stacked } from "../components";
+import {
+  BarChartComponent,
+  Button,
+  PieChartComponent,
+  SparkLine,
+  Stacked,
+} from "../components";
 import { useStateContext } from "../contexts/ContextProvider";
 
 const Ecommerce: React.FC = () => {
   const { currentColor } = useStateContext();
 
   return (
-    <div
-      className="pt-12 dark:bg-[#20232a] h-screen"
-    >
+    <div className="p-2 md:p-10 pt-12 dark:bg-[#20232a] min-h-screen">
       <div className="flex flex-wrap lg:flex-nowrap justify-center">
         <div className="bg-white dark:text-gray-200 dark:bg-secondary-dark-bg h-44 rounded-xl w-full lg:w-80 p-8 pt-9 m-3 bg-hero-pattern bg-no-repeat bg-cover bg-center">
           <div className="flex justify-between items-center">
@@ -79,7 +83,7 @@ const Ecommerce: React.FC = () => {
             </div>
           </div>
           <div className="flex gap-10 flex-wrap justify-center mt-10">
-            <div className="border-r-1 border-color m-4 pr-10">
+            <div className="sm:border-r-1 border-color m-4 sm:pr-10">
               <div>
                 <p>
                   <span className="text-3xl font-semibold">$93,438</span>
@@ -118,6 +122,29 @@ const Ecommerce: React.FC = () => {
             <div>
               <Stacked width={320} height={360} data={stackedChartData} />
             </div>
+          </div>
+        </div>
+        <div className="flex flex-col items-center w-full">
+          <div
+            className="sm:w-400 rounded-2xl py-5 px-4 h-[220px]"
+            style={{ backgroundColor: currentColor }}
+          >
+            <div className="flex justify-between items-start mt-4 mb-3 text-gray-200">
+              <p className="font-bold text-2xl">Earnings</p>
+              <div>
+                <p className="font-bold text-2xl">$63,448.78</p>
+                <p className="text-gray-300 text-md">Monthly revenue</p>
+              </div>
+            </div>
+            <BarChartComponent />
+          </div>
+
+          <div className="flex justify-between items-center bg-white dark:text-gray-200 dark:bg-secondary-dark-bg sm:w-400 rounded-2xl py-5 px-4 mt-4 h-[220px]">
+            <div>
+              <p className="text-3xl font-semibold mr-6">$48,438</p>
+              <p className="text-gray-500 dark:text-gray-400 mt-1">Expense</p>
+            </div>
+            <PieChartComponent />
           </div>
         </div>
       </div>
