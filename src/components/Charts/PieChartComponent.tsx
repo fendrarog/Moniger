@@ -34,10 +34,29 @@ const renderActiveShape = (props: any) => {
 
 const PieChartComponent: React.FC = () => {
   const { currentColor } = useStateContext();
+
   const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
+  const [clicked, setClicked] = useState(false);
 
   const onPieEnter = (_: undefined, index: number) => {
-    setActiveIndex(index);
+    if (!clicked) {
+      setActiveIndex(index);
+    }
+  };
+
+  const onPieLeave = (_: undefined, index: number) => {
+    if (!clicked) {
+      setActiveIndex(undefined);
+    }
+  };
+
+  const onPieClick = (_: undefined, index: number) => {
+    if (clicked && index === activeIndex) {
+      setClicked(false);
+    } else {
+      setClicked(true);
+      setActiveIndex(index);
+    }
   };
 
   return (
@@ -53,6 +72,8 @@ const PieChartComponent: React.FC = () => {
         fill={currentColor}
         dataKey="yval"
         onMouseEnter={onPieEnter}
+        onMouseLeave={onPieLeave}
+        onClick={onPieClick}
       >
         {SparklineAreaData.map((entry, index) => (
           <Cell

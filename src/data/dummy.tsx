@@ -90,7 +90,7 @@ export const kanbanGrid = [
   { headerText: "Done", keyField: "Close", allowToggle: true },
 ];
 
-const StyledBadge = styled(Badge)(({ theme }) => ({
+export const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
     backgroundColor: "#44b700",
     color: "#44b700",
@@ -721,24 +721,28 @@ export const chatData = [
     message: "Roman Joined the Team!",
     desc: "Congratulate him",
     time: "9:08 AM",
+    online: true,
   },
   {
     image: avatar3,
     message: "New message received",
     desc: "Salma sent you new message",
     time: "11:56 AM",
+    online: true,
   },
   {
     image: avatar4,
     message: "New Payment received",
     desc: "Check your earnings",
     time: "4:39 AM",
+    online: false,
   },
   {
     image: avatar,
     message: "Jolly completed tasks",
     desc: "Assign her new tasks",
     time: "1:12 AM",
+    online: true,
   },
 ];
 

@@ -12,6 +12,7 @@ interface StateVariable {
   isClicked: typeof initialState;
   setIsClicked: Dispatch<SetStateAction<typeof initialState>>;
   handleClick: (clicked: keyof typeof initialState) => void;
+  handleCloseClick: () => void;
   screenSize: number | undefined;
   setScreenSize: Dispatch<SetStateAction<number | undefined>>;
   currentColor: string;
@@ -65,6 +66,9 @@ export const ContextProvider = ({ children }: ContextProviderProps) => {
   const handleClick = (clicked: keyof typeof initialState) => {
     setIsClicked({ ...initialState, [clicked]: true });
   };
+  const handleCloseClick = () => {
+    setIsClicked({ ...initialState });
+  };
 
   return (
     <StateContext.Provider
@@ -74,6 +78,7 @@ export const ContextProvider = ({ children }: ContextProviderProps) => {
         isClicked,
         setIsClicked,
         handleClick,
+        handleCloseClick,
         screenSize,
         setScreenSize,
         currentColor,

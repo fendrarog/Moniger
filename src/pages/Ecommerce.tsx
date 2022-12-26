@@ -126,7 +126,7 @@ const Ecommerce: React.FC = () => {
         </div>
         <div className="flex flex-col items-center w-full">
           <div
-            className="sm:w-400 rounded-2xl py-5 px-4 h-[220px]"
+            className="sm:w-400 rounded-2xl py-5 px-4 mb-4 h-[220px]"
             style={{ backgroundColor: currentColor }}
           >
             <div className="flex justify-between items-start mt-4 mb-3 text-gray-200">
@@ -139,7 +139,7 @@ const Ecommerce: React.FC = () => {
             <BarChartComponent />
           </div>
 
-          <div className="flex justify-between items-center bg-white dark:text-gray-200 dark:bg-secondary-dark-bg sm:w-400 rounded-2xl py-5 px-4 mt-4 h-[220px]">
+          <div className="flex justify-between items-center bg-white dark:text-gray-200 dark:bg-secondary-dark-bg sm:w-400 rounded-2xl py-5 px-4 h-[220px]">
             <div>
               <p className="text-3xl font-semibold mr-6">$48,438</p>
               <p className="text-gray-500 dark:text-gray-400 mt-1">Expense</p>

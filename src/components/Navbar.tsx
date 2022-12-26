@@ -137,7 +137,7 @@ const Navbar: React.FC = () => {
           </div>
         </Tooltip>
 
-        {isClicked.cart && <Cart />}
+        <Cart />
         {isClicked.chat && <Chat />}
         {isClicked.notification && <Notification />}
         {isClicked.userProfile && <UserProfile />}
